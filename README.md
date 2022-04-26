@@ -1,2 +1,2 @@
-# snappergps-frontend
-Web app front-end for snapshot GNSS
+# snappergps-app
+Web app for snapshot GNSS
