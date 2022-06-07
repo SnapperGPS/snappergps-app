@@ -102,6 +102,8 @@ heroku git:remote -a my-snappergps-app
 ```
 * To make the interactive maps on the upload view and the download view display properly, obtain [a Mapbox access token](https://docs.mapbox.com/help/getting-started/access-tokens/).
 * Edit [public/js/upload/uploadUI.js](public/js/upload/uploadUI.js) and [public/js/view/viewUI.js](public/js/view/viewUI.js) and set the variable `mapboxAccessToken` to your token.
+* To make push notifications work, [generate a VAPID key pair for you email address](https://www.google.com/search?q=generate+vapid+key).
+* Edit [public/js/upload/uploadUI.js](public/js/upload/uploadUI.js) and set the variable `vapidPublicKey` to your public key.
 * Apply further desired changes to the source code of the SnapperGPS app.
 * Stage, commit, and push (deploy) your changes:
 ```shell
