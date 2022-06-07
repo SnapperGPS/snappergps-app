@@ -7,6 +7,8 @@
 
 const mapboxAccessToken = 'pk.eyJ1Ijoiamdyb3Nza3JldXoiLCJhIjoiY2tseWIxNTRoMHFvODJxbHlyanRobzBmZiJ9.xz2KrKBy5MRCf9XLOOPdzA';
 
+const vapidPublicKey = 'BE20bzDq0YubQSxrJ2ekzU1g9rsmv7I2ZCqqwS7mO2GV0kgPJZjvQ6a04TRUMoeZ33JioQ8S0WhX7ZwpESO4sEs';
+
 const USE_MAX_VELOCITY = true;
 
 // Status variable which locks out certain actions when upload is in process
@@ -24,9 +26,6 @@ let subscriptionJson = '{}';
 const errorCard = document.getElementById('error-card');
 const errorText = document.getElementById('error-text');
 
-// Radio button which lets users pick which out of start and end location they're most confident about
-// const confidenceRadios = document.getElementsByName('confidence-radio');
-
 // UI elements which are duplicated for start and end points (start = 0, end = 1)
 
 const dateInputs = [document.getElementById('start-date-input'), document.getElementById('end-date-input')];
@@ -35,22 +34,16 @@ const timezones = [document.getElementById('start-timezone'), document.getElemen
 
 const latInputs = [document.getElementById('start-latitude-input')]; //, document.getElementById('end-latitude-input')];
 const lngInputs = [document.getElementById('start-longitude-input')]; //, document.getElementById('end-longitude-input')];
-// const updateButtons = [document.getElementById('start-update-button')]; //, document.getElementById('end-update-button')];
-// const clearButtons = [document.getElementById('start-clear-button')]; //, document.getElementById('end-clear-button')];
 
 const aimsPink = window.getComputedStyle(errorCard).getPropertyValue('--aims-pink');
 
 // Custom marker icon
 const zebraIcon = L.icon({
-//     iconUrl: 'images/marker-icon.png',
-//     iconSize: [56 / 2, 82 / 2], // size of the icon
-//     iconAnchor: [56 / 4, 82 / 2], // point of the icon which will correspond to marker's location
-//     popupAnchor: [0, -76 / 2] // point from which the popup should open relative to the iconAnchor
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
+    iconSize: [25, 41],  // size of the icon
+    iconAnchor: [12, 41],  // point of the icon which will correspond to marker's location
+    popupAnchor: [1, -34],  // point from which the popup should open relative to the iconAnchor
     shadowSize: [41, 41]
 });
 
@@ -72,7 +65,6 @@ const confidenceCircles = [L.circle([null, null], {
 const fileInput = document.getElementById('file-input');
 
 const pairButton = document.getElementById('pair-button');
-// const changeDeviceButton = document.getElementById('change-device-button');
 
 const uploadSelectedButton = document.getElementById('upload-selected-button');
 const uploadSelectedSpinner = document.getElementById('upload-selected-spinner');
@@ -86,8 +78,6 @@ const transferSpinner = document.getElementById('transfer-spinner');
 // Count snapshots found on device
 const snapshotCountLabelTransfer = document.getElementById('snapshot-count-transfer');
 const snapshotCountLabelUpload = document.getElementById('snapshot-count-upload');
-// const uploadCountLabel = document.getElementById("upload-count");
-// var uploadCount = 0;
 
 // E-mail address field
 const emailInput = document.getElementById('email-input');
@@ -181,7 +171,7 @@ function createMap (mapID) {
 
 // Create map objects
 
-const maps = [createMap('start-map')]; //, createMap('end-map')];
+const maps = [createMap('start-map')];
 
 // Create canvases which cover maps to allow greying out
 
@@ -241,20 +231,6 @@ function updateMap (index, latlng) {
 
 }
 
-// /**
-//  * Reset map
-//  * @param {integer} index Map index
-//  */
-// function clearMap (index) {
-
-//     markers[index].remove();
-//     confidenceCircles[index].remove();
-
-//     latInputs[index].value = '';
-//     lngInputs[index].value = '';
-
-// }
-
 /**
  * Animate flying to a give location
  * @param {integer} index Map index
@@ -285,8 +261,6 @@ function disableMap (index) {
 
     latInputs[index].disabled = true;
     lngInputs[index].disabled = true;
-    // clearButtons[index].disabled = true;
-    // updateButtons[index].disabled = true;
 
 }
 
@@ -308,8 +282,6 @@ function enableMap (index) {
 
     latInputs[index].disabled = false;
     lngInputs[index].disabled = false;
-    // clearButtons[index].disabled = false;
-    // updateButtons[index].disabled = false;
 
 }
 
@@ -336,38 +308,6 @@ function disableStartEndUI (index) {
     timezones[index].style.color = 'lightgray';
 
 }
-
-/**
- * React to radio button change
- */
-// function onRadioChange () {
-
-//     switch (getSelectedRadioValue('confidence-radio')) {
-
-//     case 0:
-//         enableMap(0);
-//         enableStartEndUI(0);
-//         disableMap(1);
-//         disableStartEndUI(1);
-//         break;
-
-//     case 1:
-//         enableMap(1);
-//         enableStartEndUI(1);
-//         disableMap(0);
-//         disableStartEndUI(0);
-//         break;
-
-//     case 2:
-//         enableMap(0);
-//         enableStartEndUI(0);
-//         enableMap(1);
-//         enableStartEndUI(1);
-//         break;
-
-//     }
-
-// }
 
 /**
  * React to the map being clicked by updating that map
@@ -399,18 +339,9 @@ function enableUI () {
     if (!uploading) {
 
         // Enable maps and time inputs
-        // Do nou use when using onRadioChange()
         enableMap(0);
         enableStartEndUI(0);
         enableStartEndUI(1);
-
-        // Check radio button value and enable appropriate map/UI
-
-        // onRadioChange();
-
-        // confidenceRadios[0].disabled = false;
-        // confidenceRadios[1].disabled = false;
-        // confidenceRadios[2].disabled = false;
 
         emailInput.disabled = false;  // TODO
         fileInput.disabled = false;
@@ -435,8 +366,6 @@ function enableUI () {
     if (navigator.usb && !transferring) {
 
         if (isDeviceAvailable()) {
-
-            // changeDeviceButton.disabled = true;
 
             // Upload or transfer from device buttons disabled
             // if no device is connected
@@ -656,25 +585,6 @@ async function getSnapshotDevice (uploadID, meta, data) {
 
         resolve(uploadSnapshot(uploadID, snapshotBlob, meta.timestamp, meta.battery, 1, 1, meta.temperature));
 
-        // const uploadSuccess = await uploadSnapshot(uploadID, snapshotBlob, meta.timestamp, meta.battery, 1, 1, meta.temperature);
-
-        // if (!uploadSuccess) {
-
-        //     displayError('We could not upload at least one of your snapshots.');
-
-        //     // cancelUpload(uploadID);
-
-        //     // setDeviceUploading(false);
-
-        //     // setUploading(false);
-
-        //     return;
-
-        // } else {
-        //     // ++uploadCount;
-        //     // uploadCountLabel.innerHTML = `${uploadCount} snapshots uploaded.`;
-        // }
-
     });
 
 }
@@ -767,9 +677,6 @@ function onDeviceUploadButtonClick () {
 
     snapshotCountLabelUpload.innerHTML = '0 snapshots uploaded.';
 
-    // uploadCount = 0;
-    // uploadCountLabel.innerHTML = `${uploadCount} snapshots uploaded.`;
-
     if (!isDeviceAvailable()) {
 
         return;
@@ -813,9 +720,6 @@ function onDeviceUploadButtonClick () {
         const requestMetaDataMessage = new Uint8Array([AM_USB_MSG_TYPE_GET_SNAPSHOT]);
         const requestSnapshotMessage = new Uint8Array([AM_USB_MSG_TYPE_GET_SNAPSHOT_PAGE]);
 
-        // Count the received snapshots
-        // let snapshotCount = 0;
-
         // Keep reading data from device until all snapshots are read
         let keepReading = true;
 
@@ -830,9 +734,6 @@ function onDeviceUploadButtonClick () {
         isQueueFull = false;
 
         while (keepReading) {
-
-            // Not needed if getSnapshotDevice() is used
-            // const snapshotBuffer = new Uint8Array(SNAPSHOT_SIZE).fill(0);
 
             try {
 
@@ -885,40 +786,6 @@ function onDeviceUploadButtonClick () {
                     console.log('Waiting for snapshot');
                     result = await device.transferIn(0x01, SNAPSHOT_BUFFER_SIZE - METADATA_SIZE);
 
-                    // Following block covered by getSnapshotDevice()
-
-                //     // Loop over buffer that has been transmitted via USB
-
-                //     for (let snapshotBufferIdx = 0;
-                //         snapshotBufferIdx < SNAPSHOT_BUFFER_SIZE-METADATA_SIZE;
-                //         ++snapshotBufferIdx) {
-
-                //        // Write received byte to buffer
-
-                //        snapshotBuffer[snapshotBufferIdx] = result.data.getUint8(snapshotBufferIdx);
-
-                //    }
-
-                //     console.log('Uploading file');
-
-                //     const snapshotBlob = new Blob([snapshotBuffer], {type: 'application/octet-stream'});
-
-                //     const uploadSuccess = await uploadSnapshot(uploadID, snapshotBlob, meta.timestamp, meta.battery, 1, 1, meta.temperature);
-
-                //     if (!uploadSuccess) {
-
-                //         displayError('Snapshot upload failed.');
-
-                //         cancelUpload(uploadID);
-
-                //         setDeviceUploading(false);
-
-                //         setUploading(false);
-
-                //         return;
-
-                //     }
-
                     device2ServerQueue.push({
                         uploadID: uploadID,
                         meta: meta,
@@ -948,10 +815,6 @@ function onDeviceUploadButtonClick () {
                         }).catch(console.error);
 
                     }
-
-                    // getSnapshotDevice(uploadID, meta, result.data);
-
-                    // snapshotCountLabelUpload.innerHTML = `${++snapshotCount} snapshots found.`;
 
                 } else {
 
@@ -1014,58 +877,6 @@ async function postSnapshotUploadDevice (uploadID) {
 
     const referencePoints = [];
 
-    // switch (getSelectedRadioValue('confidence-radio')) {
-
-    // case 0:
-    //     if (timeInputs[0].value === '' || dateInputs[0].value === '') {
-
-    //         console.log('Use timestamp of first snapshot for start point.');
-    //         var dt0 = earliestDate;
-
-    //     } else {
-
-    //         var dt0 = new Date(dateInputs[0].value + ' ' + timeInputs[0].value);
-
-    //     }
-    //     referencePoints.push(createReferencePointJSON(latInputs[0], lngInputs[0], dt0));
-    //     break;
-
-    // case 1:
-    //     if (timeInputs[1].value === '' || dateInputs[1].value === '') {
-
-    //         console.log('Use timestamp of last snapshot for end point.');
-    //         var dt1 = latestDate;
-
-    //     } else {
-
-    //         var dt1 = new Date(dateInputs[1].value + ' ' + timeInputs[1].value);
-
-    //     }
-    //     referencePoints.push(createReferencePointJSON(latInputs[1], lngInputs[1], dt1));
-    //     break;
-
-    // case 2:
-
-    //     if (timeInputs[0].value === '' || dateInputs[0].value === '' || timeInputs[1].value === '' || dateInputs[1].value === '') {
-
-    //         console.log('Use timestamp of first snapshot for start point.');
-    //         var dt0 = earliestDate;
-    //         console.log('Use timestamp of last snapshot for end point.');
-    //         var dt1 = latestDate;
-
-    //     } else {
-
-    //         var dt0 = new Date(dateInputs[0].value + ' ' + timeInputs[0].value);
-    //         var dt1 = new Date(dateInputs[1].value + ' ' + timeInputs[1].value);
-
-    //     }
-    //     referencePoints.push(createReferencePointJSON(latInputs[0], lngInputs[0], dt0));
-    //     referencePoints.push(createReferencePointJSON(latInputs[1], lngInputs[1], dt1));
-    //     break;
-
-    // }
-
-    // New
     if (timeInputs[0].value === '' || dateInputs[0].value === '') {
         console.log('Use timestamp of first snapshot for start point.');
         var dt0 = earliestDate;
@@ -1178,19 +989,7 @@ async function getSnapshotJSON (uploadID, snapshot) {
         const byteArray = new Uint8Array(byteNumbers);
         const blob = new Blob([byteArray], {type: 'application/octet-stream'});
         // Upload everything for this snapshot
-        // const uploadSuccess = await uploadSnapshot(uploadID, blob, dt, battery, 1, 1, temperature);
         resolve(uploadSnapshot(uploadID, blob, dt, battery, 1, 1, temperature));
-        // if (!uploadSuccess) {
-        //     displayError(err);
-        //     // cancelUpload(uploadID);
-        //     // setSelectedUploading(false);
-        //     // setUploading(false);
-        //     return;
-        // } // else {
-        //     // ++uploadCount;
-        //     // uploadCountLabel.innerHTML = `${uploadCount} snapshots uploaded.`;
-        // // }
-        // resolve(uploadSuccess);
 
     });
 
@@ -1368,34 +1167,7 @@ function onSelectedUploadButtonClick () {
                         earliestDate = dt;
 
                     }
-
-                    // Following block covered by getSnapshotJSON()
-
-                    // // Get temperature from JSON
-                    // const temperature = snapshots[i].temperature;
-                    // // Get battery voltage from JSON
-                    // const battery = snapshots[i].batteryVoltage;
-                    // // Convert base64 data to blob
-                    // const byteCharacters = atob(snapshots[i].data);
-                    // const byteNumbers = new Array(byteCharacters.length);
-                    // for (let j = 0; j < byteCharacters.length; ++j) {
-                    //     byteNumbers[j] = byteCharacters.charCodeAt(j);
-                    // }
-                    // const byteArray = new Uint8Array(byteNumbers);
-                    // const blob = new Blob([byteArray], {type: 'application/octet-stream'});
-                    // // Upload everything for this snapshot
-                    // const uploadSuccess = await uploadSnapshot(uploadID, blob, dt, battery, 1, 1, temperature);
-                    // if (!uploadSuccess) {
-                    //     displayError(err);
-                    //     cancelUpload(uploadID);
-                    //     setSelectedUploading(false);
-                    //     setUploading(false);
-                    //     return;
-                    // }
-
-                    // getSnapshotJSON(uploadID, snapshots[i]);
-
-                    // snapshotCountLabelUpload.innerHTML =  `${i+1} snapshots found.`;
+                    
                 }
 
                 await processFile2ServerQueue(uploadID, snapshots);
@@ -1406,59 +1178,7 @@ function onSelectedUploadButtonClick () {
                 // Create an array of reference points in this way so it's easy to expand to more than just two later
 
                 const referencePoints = [];
-
-                // switch (getSelectedRadioValue('confidence-radio')) {
-
-                // case 0:
-                //     if (timeInputs[0].value === '' || dateInputs[0].value === '') {
-
-                //         console.log('Use timestamp of first snapshot for start point.');
-                //         var dt0 = earliestDate;
-
-                //     } else {
-
-                //         var dt0 = new Date(dateInputs[0].value + ' ' + timeInputs[0].value);
-
-                //     }
-                //     referencePoints.push(createReferencePointJSON(latInputs[0], lngInputs[0], dt0));
-                //     break;
-
-                // case 1:
-                //     if (timeInputs[1].value === '' || dateInputs[1].value === '') {
-
-                //         console.log('Use timestamp of last snapshot for end point.');
-                //         var dt1 = latestDate;
-
-                //     } else {
-
-                //         var dt1 = new Date(dateInputs[1].value + ' ' + timeInputs[1].value);
-
-                //     }
-                //     referencePoints.push(createReferencePointJSON(latInputs[1], lngInputs[1], dt1));
-                //     break;
-
-                // case 2:
-
-                //     if (timeInputs[0].value === '' || dateInputs[0].value === '' || timeInputs[1].value === '' || dateInputs[1].value === '') {
-
-                //         console.log('Use timestamp of first snapshot for start point.');
-                //         var dt0 = earliestDate;
-                //         console.log('Use timestamp of last snapshot for end point.');
-                //         var dt1 = latestDate;
-
-                //     } else {
-
-                //         var dt0 = new Date(dateInputs[0].value + ' ' + timeInputs[0].value);
-                //         var dt1 = new Date(dateInputs[1].value + ' ' + timeInputs[1].value);
-
-                //     }
-                //     referencePoints.push(createReferencePointJSON(latInputs[0], lngInputs[0], dt0));
-                //     referencePoints.push(createReferencePointJSON(latInputs[1], lngInputs[1], dt1));
-                //     break;
-
-                // }
-
-                // New
+                
                 if (timeInputs[0].value === '' || dateInputs[0].value === '') {
                     console.log('Use timestamp of first snapshot for start point.');
                     var dt0 = earliestDate;
@@ -1669,59 +1389,7 @@ function onSelectedUploadButtonClick () {
         // Create an array of reference points in this way so it's easy to expand to more than just two later
 
         const referencePoints = [];
-
-        // switch (getSelectedRadioValue('confidence-radio')) {
-
-        // case 0:
-        //     if (timeInputs[0].value === '' || dateInputs[0].value === '') {
-
-        //         console.log('Use timestamp of first snapshot for start point.');
-        //         var dt0 = earliestDate;
-
-        //     } else {
-
-        //         var dt0 = new Date(dateInputs[0].value + ' ' + timeInputs[0].value);
-
-        //     }
-        //     referencePoints.push(createReferencePointJSON(latInputs[0], lngInputs[0], dt0));
-        //     break;
-
-        // case 1:
-        //     if (timeInputs[1].value === '' || dateInputs[1].value === '') {
-
-        //         console.log('Use timestamp of last snapshot for end point.');
-        //         var dt1 = latestDate;
-
-        //     } else {
-
-        //         var dt1 = new Date(dateInputs[1].value + ' ' + timeInputs[1].value);
-
-        //     }
-        //     referencePoints.push(createReferencePointJSON(latInputs[1], lngInputs[1], dt1));
-        //     break;
-
-        // case 2:
-
-        //     if (timeInputs[0].value === '' || dateInputs[0].value === '' || timeInputs[1].value === '' || dateInputs[1].value === '') {
-
-        //         console.log('Use timestamp of first snapshot for start point.');
-        //         var dt0 = earliestDate;
-        //         console.log('Use timestamp of last snapshot for end point.');
-        //         var dt1 = latestDate;
-
-        //     } else {
-
-        //         var dt0 = new Date(dateInputs[0].value + ' ' + timeInputs[0].value);
-        //         var dt1 = new Date(dateInputs[1].value + ' ' + timeInputs[1].value);
-
-        //     }
-        //     referencePoints.push(createReferencePointJSON(latInputs[0], lngInputs[0], dt0));
-        //     referencePoints.push(createReferencePointJSON(latInputs[1], lngInputs[1], dt1));
-        //     break;
-
-        // }
-
-        // New
+        
         if (timeInputs[0].value === '' || dateInputs[0].value === '') {
             console.log('Use timestamp of first snapshot for start point.');
             var dt0 = earliestDate;
@@ -1854,21 +1522,6 @@ function initialiseCanvas (canvas) {
  */
 function initialiseMapUI (index) {
 
-    // Use default location selection
-
-    // confidenceRadios[0].checked = true;
-    // onRadioChange();
-
-    // Add listeners to all radio buttons
-
-    // for (let i = 0; i < confidenceRadios.length; i++) {
-
-    //     const cr = confidenceRadios[i];
-
-    //     cr.addEventListener('change', onRadioChange);
-
-    // }
-
     // Add listener which adds marker to map
 
     maps[index].on('click', (event) => {
@@ -1876,18 +1529,9 @@ function initialiseMapUI (index) {
         onMapClick(index, event.latlng);
 
     });
-
-    // Add marker clearing fucntionality
-
-    // clearButtons[index].addEventListener('click', () => {
-
-    //     clearMap(index);
-
-    // });
-
+    
     // Add functionality for updating map from textboxes
 
-    // updateButtons[index].addEventListener('click', () => {
     latInputs[index].addEventListener('change', () => {
 
         const inputLat = parseFloat(latInputs[index].value);
@@ -1898,11 +1542,7 @@ function initialiseMapUI (index) {
             updateMap(index, {lat: inputLat, lng: inputLng});
             moveMapView(index, inputLat, inputLng);
 
-        } // else {
-
-        //     clearMap(index);
-
-        // }
+        }
 
     });
 
@@ -1916,11 +1556,7 @@ function initialiseMapUI (index) {
             updateMap(index, {lat: inputLat, lng: inputLng});
             moveMapView(index, inputLat, inputLng);
 
-        } // else {
-
-        //     clearMap(index);
-
-        // }
+        }
 
     });
 
@@ -1957,8 +1593,6 @@ function checkForDevice (repeat = true) {
 
             }
 
-            // changedeviceButton.disabled = false;
-
         }
 
         pairButton.disabled = true;
@@ -1972,8 +1606,6 @@ function checkForDevice (repeat = true) {
             uploadDeviceButton.disabled = true;
 
             transferButton.disabled = true;
-
-            // changedeviceButton.disabled = true;
 
             pairButton.disabled = false;
 
@@ -2008,17 +1640,10 @@ function reportCoordinateError (index) {
 
 function checkInputs () {
 
-    // let startDt, endDt;
     let invalidCoords = false;
 
     const lat0 = parseFloat(latInputs[0].value);
     const lng0 = parseFloat(lngInputs[0].value);
-    // const lat1 = parseFloat(latInputs[1].value);
-    // const lng1 = parseFloat(lngInputs[1].value);
-
-    // switch (getSelectedRadioValue('confidence-radio')) {
-
-    // case 0:
 
     if (latInputs[0].value === '' || lngInputs[0].value === '') {
 
@@ -2045,64 +1670,6 @@ function checkInputs () {
         reportCoordinateError(0);
 
     }
-
-    //     break;
-
-    // case 1:
-
-    //     if (latInputs[1].value === '' || lngInputs[1].value === '') {
-
-    //         displayError('No latitude and longitude for end point entered. ' +
-    //                     'Please provide your end point.');
-
-    //         latInputs[1].style.border = (latInputs[1].value === '') ? '2px solid red' : '';
-    //         lngInputs[1].style.border = (lngInputs[1].value === '') ? '2px solid red' : '';
-
-    //         setTimeout(() => {
-
-    //             latInputs[1].style.border = '';
-    //             lngInputs[1].style.border = '';
-
-    //         }, 6000);
-
-    //         return false;
-
-    //     }
-
-    //     if (!areValidCoords(lat1, lng1)) {
-
-    //         invalidCoords = true;
-
-    //         reportCoordinateError(1);
-
-    //     }
-
-    //     break;
-
-    // case 2:
-
-    //     if (latInputs[0].value === '' || lngInputs[0].value === '' || latInputs[1].value === '' || lngInputs[1].value === '') {
-
-    //         displayError('No latitude and longitude for both, start and end point, entered. ' +
-    //                      'Please provide your start and end point.');
-
-    //         latInputs[0].style.border = (latInputs[0].value === '') ? '2px solid red' : '';
-    //         lngInputs[0].style.border = (lngInputs[0].value === '') ? '2px solid red' : '';
-    //         latInputs[1].style.border = (latInputs[1].value === '') ? '2px solid red' : '';
-    //         lngInputs[1].style.border = (lngInputs[1].value === '') ? '2px solid red' : '';
-
-    //         setTimeout(() => {
-
-    //             latInputs[0].style.border = '';
-    //             lngInputs[0].style.border = '';
-    //             latInputs[1].style.border = '';
-    //             lngInputs[1].style.border = '';
-
-    //         }, 6000);
-
-    //         return false;
-
-    //     }
 
     if (dateInputs[0] !== '' && dateInputs[1] !== '' && timeInputs[0] !== '' && timeInputs[1] !== '' ) {
 
@@ -2140,24 +1707,6 @@ function checkInputs () {
             return false;
 
         }
-
-        // if (!areValidCoords(lat0, lng0)) {
-
-        //     invalidCoords = true;
-
-        //     reportCoordinateError(0);
-
-        // }
-
-        // if (!areValidCoords(lat1, lng1)) {
-
-        //     invalidCoords = true;
-
-        //     reportCoordinateError(1);
-
-        // }
-
-        // break;
 
     }
 
@@ -2214,20 +1763,6 @@ pairButton.addEventListener('click', () => {
     });
 
 });
-
-// changeDeviceButton.addEventListener('click', () => {
-
-//     requestDevice((err) => {
-
-//         if (!err) {
-
-//             errorCard.style.display = 'none';
-
-//         }
-
-//     });
-
-// });
 
 // Set function which is called when connection to a WebUSB device is lost
 
@@ -2357,8 +1892,6 @@ transferButton.onclick = async () => {
 
         const snapshotBuffer = new Uint8Array(SNAPSHOT_SIZE).fill(0);
 
-        // let dt, battery, temperature;
-
         try {
 
             console.log('Request meta data.');
@@ -2470,81 +2003,6 @@ transferButton.onclick = async () => {
 
     snapshotCountLabelTransfer.innerHTML = snapshotCountLabelMemory + ' Preparing JSON download.';
 
-    // console.log('Delete the following lines.'); // TODO
-
-    // console.log('Detected firmware: ' + firmwareDescription);
-
-    // if (firmwareDescription === 'SnapperGPS-Saltwater-Log') {
-
-    //     // Message to communicate to device via USB
-    //     const AM_USB_MSG_TYPE_GET_RESISTANCE = 11;
-    //     const requestResistances = new Uint8Array([AM_USB_MSG_TYPE_GET_RESISTANCE]);
-
-    //     // Keep reading data from device until all resistance values are read
-    //     let keepReading = true;
-
-    //     const resistanceArray = [];
-
-    //     while (keepReading) {
-
-    //         try {
-
-    //             console.log('Request resistance page.');
-    //             // Request to start reading new record from flash memory
-    //             let result = await device.transferOut(0x01, requestResistances);
-
-    //             console.log('Wait for resistance data.');
-    //             // Wait until resistance data is returned
-    //             result = await device.transferIn(0x01, 1024 * 2);
-
-    //             const data = result.data;
-
-    //             // Check if device has sent data
-    //             if (data.getUint8(0) !== 0xFF || data.getUint8(1) !== 0xFF) {
-
-    //                 // Loop over buffer that has been transmitted via USB
-
-    //                 for (let bufferIdx = 0; bufferIdx < 1024 && (data.getUint8(2 * bufferIdx) !== 0xFF || data.getUint8(2 * bufferIdx + 1) !== 0xFF); ++bufferIdx) {
-
-    //                     // Write received byte to buffer and increment counter
-
-    //                     resistanceArray.push(data.getUint8(2 * bufferIdx) +
-    //                                          256 * data.getUint8(2 * bufferIdx + 1));
-
-    //                 }
-
-    //             } else {
-
-    //                 keepReading = false;
-
-    //             }
-
-    //         } catch (err) {
-
-    //             // Stop reading if USB communication failed
-
-    //             console.error(err);
-
-    //             // Stop reading if USB communication failed
-    //             keepReading = false;
-
-    //             displayError('We could not read all data from your SnapperGPS receiver. You might want to unplug and reconnect it and try again.');
-
-    //             setTransferring(false);
-
-    //             return;
-
-    //         }
-
-    //     }
-
-    //     // Return JSON file
-    //     const jsonContent = 'data:text/json;charset=utf-8,' +
-    //     JSON.stringify(resistanceArray, null, 4);
-    //     createDownloadLink(jsonContent, jsonData.deviceID + '_resistances.json');
-
-    // } // end delete
-
     // Generate filename from device ID and timestamp of first snapshot
     let timeString = '';
     if (jsonData.snapshots.length > 0) {
@@ -2557,19 +2015,6 @@ transferButton.onclick = async () => {
     createDownloadLink(jsonContent, jsonData.deviceID + timeString + '.json');
 
     snapshotCountLabelTransfer.innerHTML = snapshotCountLabelMemory + ' Preparing ZIP download.';
-
-    // // Turn meta data arrays into object
-    // // Reverse arrays first to start with snapshot that was recorded first
-    // const metaData = {
-    //     timestamp: timestampArray,
-    //     temperature: temperatureArray,
-    //     battery_voltage: batteryArray,
-    //     file: filenameArray
-    // };
-    // // Convert object to json
-    // const metaDataJSON = JSON.stringify(metaData);
-    // // Add json file with meta data to zip folder
-    // zip.file('meta.json', metaDataJSON);
 
     // Turn meta data into .csv file
 
@@ -2608,11 +2053,6 @@ transferButton.onclick = async () => {
     zip.file('metadata.csv', csvContent);
 
     // Construct zip filename from current time
-    // const zipUTC = new Date();
-    // const zipName = zipUTC.getFullYear() + ('0' + (zipUTC.getMonth() + 1)).slice(-2) +
-    //     ('0' + zipUTC.getDate()).slice(-2) + '_' + ('0' + zipUTC.getHours()).slice(-2) +
-    //     ('0' + zipUTC.getMinutes()).slice(-2) + ('0' + zipUTC.getSeconds()).slice(-2) +
-    //     '.zip';
     const zipName = jsonData.deviceID + timeString + '.zip';
 
     console.log('Save zip file.');
@@ -2726,8 +2166,6 @@ notificationCheckbox.onchange = async () => {
 
             } else {
 
-                // Get the server's public key
-                const vapidPublicKey = 'BE20bzDq0YubQSxrJ2ekzU1g9rsmv7I2ZCqqwS7mO2GV0kgPJZjvQ6a04TRUMoeZ33JioQ8S0WhX7ZwpESO4sEs';//'BMm62Uc_82oCMDpAJuKnhO4AyY3BBu0fXuaaP31g_Kp5baXOLTcNGsQQ_1L3HrKoc7VuUmkM7jX9RqH9Z9sSgWQ';//'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEybrZRz/zagIwOkAm4qeE7gDJjcEG7R9e5po/fWD8qnltpc4tNw0axBD/UvcesqhztW5SaQzuNf1Gof1n2xKBZA==';// 
                 // Chrome doesn't accept the base64-encoded (string) vapidPublicKey yet
                 const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
@@ -2818,7 +2256,6 @@ if (!USE_MAX_VELOCITY) {
 if (!navigator.usb) {
 
     pairButton.disabled = true;
-    // changedeviceButton.disabled = true;
     transferButton.disabled = true;
     uploadDeviceButton.disabled = true;
 
@@ -2870,6 +2307,5 @@ if ('serviceWorker' in navigator) {
 
 // Prepare the start/end location maps
 initialiseMapUI(0);
-// initialiseMapUI(1);
 
 updateCache();

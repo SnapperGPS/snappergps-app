@@ -55,15 +55,11 @@ var map;
 
 // Custom marker icon
 const zebraIcon = L.icon({
-//     iconUrl: 'images/marker-icon.png',
-//     iconSize: [56 / 2, 82 / 2], // size of the icon
-//     iconAnchor: [56 / 4, 82 / 2], // point of the icon which will correspond to marker's location
-//     popupAnchor: [0, -76 / 2] // point from which the popup should open relative to the iconAnchor
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
+    iconSize: [25, 41],  // size of the icon
+    iconAnchor: [12, 41],  // point of the icon which will correspond to marker's location
+    popupAnchor: [1, -34],  // point from which the popup should open relative to the iconAnchor
     shadowSize: [41, 41]
 });
 
@@ -180,7 +176,7 @@ function populateMap (positions) {
         if (date >= startDateTime && date <= endDateTime) {
             // Add marker.
             const marker = L.marker([lat, lng], {icon: zebraIcon, riseOnHover: true}); // .addTo(myMap);
-            //  Do not add marker to map by default because it slows down
+            // Do not add marker to map by default because it slows down
             // everything if 10,000 points are present.
             // Check if point is good.
             if (isPositionPlausible(positions[i])) {

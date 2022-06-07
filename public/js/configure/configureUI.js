@@ -23,7 +23,6 @@ const limitEndDateInput = document.getElementById('limit-end-date-input');
 const limitEndTimeInput = document.getElementById('limit-end-time-input');
 
 const pairButton = document.getElementById('pair-button');
-// const changeDeviceButton = document.getElementById('change-device-button');
 const configureButton = document.getElementById('configure-button');
 const shutdownButton = document.getElementById('shutdown-button');
 
@@ -56,30 +55,8 @@ var restarting = false;
  */
 function enableUI () {
 
-    // limitStartCheckbox.disabled = false;
-    // if (limitStartCheckbox.checked) {
-
-    //     limitStartLabel.style.color = '';
-    //     limitStartDateInput.disabled = false;
-    //     limitStartTimeInput.disabled = false;
-    //     limitStartTimezone.style.color = '';
-
-    // }
-
-    // limitEndCheckbox.disabled = false;
-    // if (limitEndCheckbox.checked) {
-
-    //     limitEndLabel.style.color = '';
-    //     limitEndDateInput.disabled = false;
-    //     limitEndTimeInput.disabled = false;
-    //     limitEndTimezone.style.color = '';
-
-    // }
-
     if (isDeviceAvailable()) {
 
-        // changedeviceButton.disabled = false;
-        // firmwareButton.disabled = false;
         configureButton.disabled = false;
         shutdownButton.disabled = false;
 
@@ -96,20 +73,7 @@ function enableUI () {
  */
 function disableUI () {
 
-    // limitStartCheckbox.disabled = true;
-    // limitStartLabel.style.color = 'lightgray';
-    // limitStartDateInput.disabled = true;
-    // limitStartTimeInput.disabled = true;
-    // limitStartTimezone.style.color = 'lightgray';
-
-    // limitEndCheckbox.disabled = true;
-    // limitEndLabel.style.color = 'lightgray';
-    // limitEndDateInput.disabled = true;
-    // limitEndTimeInput.disabled = true;
-    // limitEndTimezone.style.color = 'lightgray';
-
     pairButton.disabled = true;
-    // changedeviceButton.disabled = true;
     firmwareButton.disabled = true;
     configureButton.disabled = true;
     shutdownButton.disabled = true;
@@ -154,8 +118,6 @@ function checkForDevice (repeat = true) {
                 firmwareButton.disabled = true;
                 firmwareInfo.innerHTML = 'Your firmware is up to date.';
             }
-
-            // changedeviceButton.disabled = false;
 
             let timeDiffString = '';
 
@@ -216,7 +178,6 @@ function checkForDevice (repeat = true) {
         configureButton.disabled = true;
         shutdownButton.disabled = true;
         firmwareButton.disabled = true;
-        // firmwareInfo.innerHTML = 'No firmware found.';
 
         if (!restarting) {
 
@@ -224,7 +185,6 @@ function checkForDevice (repeat = true) {
             pairButton.disabled = false;
 
         }
-        // changedeviceButton.disabled = true;
 
         statusInfo.innerHTML = 'No receiver connected.';
 
@@ -564,36 +524,7 @@ firmwareButton.addEventListener('click', () => {
 
         }).finally(() => {
 
-            // // Change button style back
-            // setUpdating(false);
-
-            // enableUI();
-
-            // // Immediately update device info box after firmware update
-            // checkForDevice(repeat=false);
-
         });
-
-        // updateFirmware((err) => {
-
-        //     if (err) {
-
-        //         displayError(err);
-
-        //     } else {
-
-        //         errorDisplay.style.display = 'none';
-
-        //     }
-
-        //     setUpdating(false);
-
-        //     enableUI();
-
-        //     // Immediately update device info box after firmware update
-        //     checkForDevice();
-
-        // });
 
     }
 
@@ -630,20 +561,6 @@ pairButton.addEventListener('click', () => {
     });
 
 });
-
-// changeDeviceButton.addEventListener('click', () => {
-
-//     requestDevice((err) => {
-
-//         if (!err) {
-
-//             errorDisplay.style.display = 'none';
-
-//         }
-
-//     });
-
-// });
 
 // Set the function which will be called when a WebUSB device is disconnected
 

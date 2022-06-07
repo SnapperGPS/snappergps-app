@@ -30,9 +30,6 @@ const firmwareVersionSpan = document.getElementById('firmware-version-span');
 const snapshotCountSpan = document.getElementById('snapshot-count-span');
 const statusSpan = document.getElementById('status-span');
 
-// const snapshotCountLi = document.getElementById('snapshot-count-li');
-// const statusLi = document.getElementById('status-li');
-
 /**
  * Reset UI elements to placeholder values
  */
