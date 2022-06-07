@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SnapperGPS - Upload</title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/upload.css" />
+        <script src="js/deviceCommunication.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Upload the data from your SnapperGPS receiver after a completed deployment.">
+    </head>
+    <body>
+
+        <!-- Nav bar -->
+        <%- include ('partials/navBar', {pageName: 'upload'}) %>
+
+        <!-- Main body -->
+        <main class="container">
+
+            <div class="row">
+                <div class="col">
+                    <h1>Upload the data from your SnapperGPS receiver after a
+                        completed deployment</h1>
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 20px;"">
+                <div class="col">
+                    <i>
+                        Did you know that this site works offline, too?
+                        You can transfer data from your SnapperGPS receiver
+                        to your computer in the field.
+                        (If you do not clear your browser cache.)
+                    </i>
+                </div>
+            </div>
+
+            <div class="row bg-white">
+
+                <div>
+                    <%- include ('partials/webUsbSupport') %>
+                </div>
+
+                <div id="error-card" style="display: none;">
+                    <div class="card text-white bg-danger mb-3" style="max-width: 100%;">
+                        <div class="card-header"><b>Error</b></div>
+                        <div class="card-body">
+                            <p class="card-text" id="error-text">Error</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        Connect your SnapperGPS receiver
+                        via USB.
+                        If you used SnapperGPS before, then you can see some information
+                        from your SnapperGPS receiver below.
+                        Otherwise, click <i>Pair receiver</i> and select your SnapperGPS
+                        receiver from the list.
+                    </div>
+                </div>
+
+                <div class="row-ident">
+                    <%- include ('partials/deviceInfo') %>
+                </div>
+
+                <div class="row btnrow row-ident">
+                    <div class="col btncol">
+                        <button class="btn btn-primary full-width" id="pair-button" style="min-width: 175px" disabled>Pair receiver</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        You have the option to transfer the raw data from your
+                        SnapperGPS receiver to your device.
+                        You can
+                        upload it to our server later, which then calculates the track.
+                        However, if you have an internet connection, then you
+                        most likely want to skip this step and
+                        upload your data
+                        immediately.
+                        If you transfer the data, you will be provided with a .json
+                        and a .zip file, which contain identical information.
+                        Therefore, it is sufficient to keep only one of both
+                        (preferably, the .json file).
+                    </div>
+                </div>
+
+                <div class="row btnrow row-ident">
+                    <div class="col btncol">
+                        <button class="btn btn-primary full-width" id="transfer-button" style="min-width: 175px" disabled>Transfer data</button>
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <span id="snapshot-count-transfer">
+                            0 snapshots transferred. 
+                        </span>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none; margin-left: 5px" id="transfer-spinner"></span>          
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        If you want to upload the data from your SnapperGPS
+                        receiver, then
+                        provide a rough location where the deployment started.
+                        Either select a location on the map or
+                        enter its latitude and longitude.
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <div class="map-holder">
+                            <div class="map" id="start-map" style="z-index: 1;"></div>
+                            <canvas class="map-canvas" id="start-map-canvas" style="z-index: 2; display: none;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row row-ident btnrow">
+                    <div class="col-auto btncol">
+                        <label for="start-latitude-input">Latitude:</label>
+                        <input id="start-latitude-input" type="number" placeholder="00.000000" style="width: 8em;">
+                        <label for="start-latitude-input">&deg; N/S</label>
+                    </div>
+                    <div class="col-auto btncol">
+                        <label for="start-longitude-input">Longitude:</label>
+                        <input id="start-longitude-input" type="number" placeholder="000.000000" style="width: 8em;">
+                        <label for="start-latitude-input">&deg; W/E</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        If your actual deployment began later than the receiver
+                        started to capture data, then provide a start date and
+                        time. Snapshots before the start date and after the end
+                        date will be excluded from processing. This speeds up
+                        processing, especially, if the receiver recorded its
+                        first data indoors. Additionally, if the first snapshots
+                        contain no or very few satellites, then this can harm
+                        the reliability
+                        of all subsequent estimates. Therefore, choose a start
+                        time that is likely to have a good view of the sky.
+                    </div>
+                </div>
+
+                <div class="row btnrow row-ident">
+                    <div class="col-auto btncol">
+                        <label for="start-date-input" style="margin-right: 10px;">Start:</label>
+                        <input id="start-date-input" type="date">
+                        <input id="start-time-input" type="time" value="00:00">
+                        <label id="start-timezone" for="start-time-input"></label>
+                    </div>
+                    <div class="col-auto btncol">
+                        <label for="end-date-input" style="margin-right: 10px;">End:</label>
+                        <input id="end-date-input" type="date">
+                        <input id="end-time-input" type="time" value="00:00">
+                        <label id="end-timezone" for="end-time-input"></label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        You can optionally
+                        provide an expected maximum velocity of your SnapperGPS
+                        receiver to improve outlier detection.
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <label for="velocity-input" style="margin-right: 10px;" id="velocity-input-label">Max. velocity:</label>
+                        <input id="velocity-input" type="number" value=""  min="0"
+                            style="width: 70px; text-align: right;">
+                        <select id="velocity-unit-input" style="height: 30px;">
+                            <option value="m/s">metres/second</option>
+                            <option value="km/h">kilometres/hour</option>
+                            <option value="mph">miles/hour</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        To be notified once our server is done with
+                        processing your data and calculating your track,
+                        you have three options:
+                        <ul>
+                            <li>
+                                Enter your e-mail address.
+                                We will only use it for this purpose and delete it
+                                afterwards.
+                            </li>
+                            <li>
+                                Subscribe to our Telegram bot
+                                <a class="text-link" href="https://t.me/SnapperGPSBot">@SnapperGPSBot</a>
+                                after you have uploaded your data.
+                            </li>
+                            <li>
+                                Receive a push notification on this device.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <label for="email-input" style="margin-right: 10px;">E-mail:</label>
+                        <input id="email-input" type="email">
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <label for="notification-checkbox" style="margin-right: 10px; color: lightgray;" id="notification-label">Push notification:</label>
+                        <input type="checkbox" id="notification-checkbox" disabled>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        Choose if you want to upload data to the server
+                        that you saved earlier,
+                        either a single .json file (preferred) or all .bin files from the .zip folder,
+                        or if
+                        you want to directly upload data from a connected SnapperGPS
+                        receiver.
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <input id="file-input" type="file" accept=".bin,.json" multiple>
+                    </div>
+                </div>
+
+                <div class="row row-ident" hidden>
+                    <div class="col">
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input confidence-radio" name="priority-radio" id="priority-immediate-radio" value="0">
+                            <label class="form-check-label" for="priority-immediate-radio">
+                                Immediate processing.
+                            </label>
+                            <p>
+                                (Data will be processed as soon as the server has
+                                the capacaity.
+                                Location estimates for data from the day of your
+                                upload might be missing or of low quality.)
+                            </p>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input confidence-radio" name="priority-radio" id="priority-rapid-radio" value="1" checked>
+                            <label class="form-check-label" for="priority-rapid-radio">
+                                Rapid processing.
+                            </label>
+                            <p>
+                                (Data will be processed no earlier than the
+                                afternoon of the last day of your recording.
+                                Location estimates for data from the day of your
+                                upload might be of lower quality.)
+                            </p>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input confidence-radio" name="priority-radio" id="priority-delayed-radio" value="2">
+                            <label class="form-check-label" for="priority-delayed-radio">
+                                Delayed processing.
+                            </label>
+                            <p>
+                                (Data will be processed no earlier than the
+                                afternoon of the day after the last day of your
+                                recording.)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row btnrow row-ident">
+                    <div class="col">
+                        <button class="btn btn-primary full-width btncol" id="upload-selected-button" disabled>Upload selected files</button>
+                        <button class="btn btn-primary full-width btncol" id="upload-device-button" style="min-width: 175px" disabled>Upload from receiver</button>
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <span id="snapshot-count-upload">
+                            0 snapshots uploaded.
+                        </span>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none; margin-left: 5px" id="upload-selected-spinner"></span>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none; margin-left: 5px" id="upload-device-spinner"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-white">
+                <div class="col">
+                    <a class="text-link" href="/privacy">Privacy policy</a>
+                </div>
+            </div>
+
+        </main>
+
+    </body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.2/esri-leaflet.js"></script>
+    <!-- Geocoding Control -->
+    <script src="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css">
+    
+    <script src="jszip.min.js"></script>
+    <script src="FileSaver.js"></script>
+    <script src="js/serverCommunication.js"></script>
+    <script src="js/upload/uploadComms.js"></script>
+    <script src="service-worker.js"></script>
+    <script src="js/upload/uploadUI.js"></script>
+
+</html>

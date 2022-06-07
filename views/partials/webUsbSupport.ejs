@@ -1,0 +1,32 @@
+<div id="warning-display" style="display: none;">
+    <div class="card text-white bg-warning mb-3" style="max-width: 100%;height: 150%">
+        <div class="card-header"><b>Warning</b></div>
+        <div class="card-body">
+            <p class="card-text">
+                Your browser does not support the WebUSB
+                technology, which is necessary to configure a SnapperGPS
+                receiver for a deployment or to upload data from a receiver
+                to the server for processing. However, you can still view
+                data that has already been processed. For full functionality,
+                please switch to a Chromium-based
+                browser such as Edge or Chrome.
+            </p>
+        </div>
+    </div>
+</div>
+<script>
+    // Check for HTTPS protocol
+    if (window.location.protocol !== 'https:' && window.location.hostname !== "localhost") {
+
+        // If not HTTPS, switch to it
+        window.location.replace(`https:${window.location.href.substring(window.location.protocol.length)}`);
+
+    }
+
+    // Check if WebUSB is still not available
+    if (!navigator.usb) {
+
+        document.getElementById('warning-display').style.display = '';
+
+    }
+</script>

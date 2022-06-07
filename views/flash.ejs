@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SnapperGPS - Flash</title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="js/deviceCommunication.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Flash your SnapperGPS receiver with custom firmware.">
+    </head>
+    <body>
+
+        <!-- Nav bar -->
+        <%- include ('partials/navBar', {pageName: 'flash'}) %>
+
+        <!-- Main body -->
+        <main class="container">
+
+            <div class="row">
+                <div class="col">
+                    <h1>Flash your SnapperGPS receiver with custom firmware</h1>
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col">
+                    <i>
+                        Did you know that this site works offline, too?
+                        You can configure your SnapperGPS receiver in the field.
+                        (If you do not clear your browser cache.)
+                    </i>
+                </div>
+            </div>
+
+            <div class="row bg-white">
+
+                <div>
+                    <%- include ('partials/webUsbSupport') %>
+                </div>
+
+                <div id="error-display" style="display: none;">
+                    <div class="card text-white bg-danger mb-3" style="max-width: 100%;">
+                        <div class="card-header"><b>Error</b></div>
+                        <div class="card-body">
+                            <p class="card-text" id="error-text">Error</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        Connect your SnapperGPS receiver
+                        via USB.
+                        If you used SnapperGPS before, then you can see some information
+                        from your SnapperGPS receiver below.
+                        Otherwise, click <i>Pair receiver</i> and select your SnapperGPS
+                        receiver from the list.
+                    </div>
+                </div>
+
+                <div class="row-ident">
+                    <%- include ('partials/deviceInfo') %>
+                </div>
+
+                <div class="row btnrow row-ident">
+                    <div class="col btncol">
+                        <button class="btn btn-primary full-width" id="pair-button" style="min-width: 175px" disabled>Pair receiver</button>
+                    </div>
+                </div>
+            
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        If the firmware of your SnapperGPS receiver is not up to
+                        date, then consider updating it at this stage.
+                    </div>
+                </div>
+
+                <!-- <div class="row row-ident">
+                    <div class="col">
+                        <label for="total-size-input" style="margin-right: 10px;">Firmware size:</label>
+                        <input id="total-size-input" type="number" value="49152"  min="0"
+                            style="width: 70px; text-align: right;">
+                        <label for="total-size-input">bytes</label>
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <label for="chunk-size-input" style="margin-right: 10px;">Flash page size:</label>
+                        <input id="chunk-size-input" type="number" value="2048"  min="0"
+                            style="width: 70px; text-align: right;">
+                        <label for="chunk-size-input">bytes</label>
+                    </div>
+                </div> -->
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <label for="file-input" style="margin-right: 10px;" hidden>Custom firmware:</label>
+                        <input id="file-input" type="file" accept=".bin">
+                    </div>
+                </div>
+
+                <div class="row btnrow row-ident">
+                    <div class="col btncol">
+                        <button class="btn btn-primary full-width" id="firmware-button" style="min-width: 175px" disabled>Update firmware</button>
+                    </div>
+                </div>
+                <div class="row row-ident">
+                    <div class="col">
+                        <span id="firmware-info">
+                            No firmware for update selected. 
+                        </span>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none; margin-left: 5px" id="firmware-spinner"></span>       
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="js/configure/configureComms.js"></script>
+    <script src="service-worker.js"></script>
+    <script src="js/configure/flashUI.js"></script>
+
+</html>

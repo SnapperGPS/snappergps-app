@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SnapperGPS - Status</title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+        <!-- Nav bar -->
+        <%- include ('partials/navBar', {pageName: 'status'}) %>
+
+        <!-- Main body -->
+        <main class="container">
+
+            <div class="row">
+                <div class="col">
+                    <h1>
+                        Inspect the accuracy of a stationary SnapperGPS receiver
+                        <div class="spinner-border" role="status" id="download-spinner" style="margin-left: 10px;"></div>
+                    </h1>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row btnrow">
+                    <div class="col-auto btncol">
+                        <input type="month" id="month-input" min="2021-11" value="2018-05">
+                    </div>
+                </div>
+
+            </div>
+
+            <table class="table table-striped" id="status-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Date/time</th>
+                    <th scope="col" style="text-align: right;">Reliability (RT)</th>
+                    <th scope="col" style="text-align: right;">Accuracy (RT)</th>
+                    <th scope="col" style="text-align: right;">Reliability (post)</th>
+                    <th scope="col" style="text-align: right;">Accuracy (post)</th>
+                  </tr>
+                </thead>
+                <tbody id="status-body"></tbody>
+              </table>
+
+        </main>
+
+    </body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="js/serverCommunication.js"></script>
+    <script src="js/status/statusUI.js"></script>
+
+</html>

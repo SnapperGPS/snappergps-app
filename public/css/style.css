@@ -1,0 +1,163 @@
+:root {
+    --aims-purple: #5E2590;
+    --aims-pink: #B390CF;
+    --aims-bright-gray: #999999;
+    --aims-dark-gray: #5C5C5C;
+}
+
+.row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.navbar-nav {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+body {
+    padding-top: 75px;
+    padding-bottom: 25px;
+}
+
+.btn-primary {
+    background-color: var(--aims-purple);
+    border-color: var(--aims-pink);
+}
+
+.btn-primary:hover {
+    background-color: var(--aims-pink) !important;
+    border-color:  var(--aims-bright-gray);
+    color: var(--aims-dark-gray);
+}
+
+.btn-primary:disabled {
+    background-color: var(--aims-bright-gray);
+    border-color: var(--aims-dark-gray);
+}
+
+.btn-primary:active {
+    box-shadow: 0px 0px 0px 5px var(--aims-pink) !important;
+}
+
+.btn-primary:focus {
+    background-color: var(--aims-purple) !important;
+    border-color: var(--aims-pink);
+    box-shadow: 0px 0px 0px 5px var(--aims-pink);
+}
+
+.btn-primary:visited {
+  background-color: var(--aims-purple);
+  border-color: var(--aims-pink);
+}
+
+/* Add white space between buttons when they wrap */
+.btncol {
+    margin-bottom: 10px;
+}
+
+/* Goes together with btncol to remove extra white space after last button */
+.btnrow {
+    margin-bottom: 0px !important;
+}
+
+.row-ident {
+    margin-left: 2%;
+    width: 96%;
+}
+
+.row-ident-2 {
+    margin-left: 4%;
+    width: 92%;
+}
+
+.bg-light {
+    background-color: #f3f3f3 !important;
+    margin-bottom: 30px !important;
+}
+
+.bg-light-card {
+    margin-top: 10px;
+    background-color: #f3f3f3 !important;
+}
+
+.bg-white {
+    margin-top: 30px !important;
+}
+
+.text-link {
+    color: var(--aims-purple) !important;
+    overflow-wrap: break-word;
+}
+
+/* On very small screens, make buttons full width */
+@media(max-width: 575.98px) {
+    button.full-width {
+        width: 100% !important;
+        min-width: 0px;
+    }
+}
+
+/* On small screens, make buttons half width such that 2 buttons are full width */
+@media(max-width: 991.98px) and (min-width: 576px) {
+    button.half-width {
+        width: 49.5% !important;
+        min-width: 0px;
+    }
+}
+
+/* On medium screens, make buttons quarter width such that 4 buttons are full width */
+@media(max-width: 1199.98px) and (min-width: 992px) {
+    button.quarter-width {
+        width: 24.6% !important;
+        min-width: 0px;
+    }
+}
+
+/* Hide short text by default on larger screens */
+.short-text {
+    display: none;
+}
+
+/* On very small screens, hide full text and show short text */
+@media (max-width: 383.98px) {
+    .short-text {
+        display: inline-block;
+    }
+    .full-text {
+        display: none;
+    }
+}
+
+.shadow { 
+    -webkit-filter: drop-shadow(5px 5px 5px #222);
+    filter: drop-shadow(5px 5px 5px #222);
+    margin-bottom: 20px;
+}
+
+/* Hack to avoid white lines between tiles
+https://github.com/Leaflet/Leaflet/issues/3575 */
+.leaflet-tile-container img {
+    width: 256.5px !important;
+    height: 256.5px !important;
+}
+
+/*AIMS color scheme for marker clusters on download map*/
+.marker-cluster-small {
+    background-color: #5E259066;
+}
+.marker-cluster-small div {
+    background-color: #5E259099;
+}
+.marker-cluster-medium {
+    background-color: #5C5C5C66;
+}
+.marker-cluster-medium div {
+    background-color: #5C5C5C99;
+}
+.marker-cluster-large {
+    background-color: #99999966;
+}
+.marker-cluster-large div {
+    background-color: #99999999;
+}

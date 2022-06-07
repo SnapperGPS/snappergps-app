@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SnapperGPS - Privacy Policy</title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="manifest" href="snappergps.webmanifest">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Privacy policy.">
+        <meta name="theme-color" content="#5E2590">
+        <link rel="apple-touch-icon" href="images/icon-512-pink.png">
+    </head>
+    <body>
+
+        <!-- Nav bar -->
+        <%- include ('partials/navBar', {pageName: 'privacy'}) %>
+
+        <!-- Main body -->
+        <main class="container">
+
+            <div class="row">
+                <div class="col">
+                    <h1>Privacy policy</h1>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div class="row">
+                    <div class="col-auto">
+                        <ul>
+                            <li>The only user data that the SnapperGPS web app
+                                collects is data that
+                                users upload from a connected SnapperGPS
+                                receiver or from files via the
+                                <a href="/upload" class="text-link">upload</a>
+                                view.
+                                This may include raw navigation satellite signal
+                                snapshots, measurement timestamps, battery
+                                voltage measurements, temperature measurements,
+                                a unique receiver ID, and an upload timestamp.
+                            </li>
+                            <li>In addition, providing an email address or
+                                allowing push notifications on the
+                                <a href="/upload" class="text-link">upload</a>
+                                view is optional.
+                            </li>
+                            <li>The uploaded data is temporarily stored on
+                                servers of an external service provider
+                                (Heroku/AWS) in Ireland and then processed on
+                                servers of the University of Oxford in the UK.
+                            </li>
+                            <li>No user data is disclosed to any third party.
+                            </li>
+                            <li>Email and push notifications are optional and
+                                are only employed to notify users about the
+                                processing progress of their data.
+                            </li>
+                            <li>Any email address is deleted after data
+                                processing is complete.
+                            </li>
+                            <li>To check which of your data we precisely hold or
+                                to have it deleted before processing is
+                                complete, please contact
+                                <i>snappergps [at] mail [dot] com </i>
+                                providing your unique upload ID and/or email
+                                address and/or receiver ID that is linked to the
+                                upload.
+                            </li>
+                            <li>The SnapperGPS team is not responsible for
+                                content on linked third-party websites.
+                            </li>
+                            <li>The SnapperGPS web app does not use any cookies,
+                                including third-party cookies.
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col justify-content-center align-self-center" style="text-align: center;">
+                        <img src="images/icon-192.png" style="max-width: 192px" alt="SnapperGPS logo">
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+
+    </body>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+
+</html>

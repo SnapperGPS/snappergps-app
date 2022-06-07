@@ -1,0 +1,25 @@
+.confidence-radio {
+    margin-right: 10px;
+}
+
+.map-holder {
+    position: relative;
+    width: 100%;
+    height: 400px;
+}
+
+.map {
+    width: 100%;
+    height: 400px;
+    position: absolute;
+}
+
+.map-canvas {
+    width: 100%;
+    height: 400px;
+    position: absolute;
+}
+
+.leaflet-container.crosshair-cursor-enabled {
+    cursor: crosshair;
+}

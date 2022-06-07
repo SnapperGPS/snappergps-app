@@ -1,0 +1,53 @@
+{
+    "name": "SnapperGPS",
+    "short_name": "SnapperGPS",
+    "description": "Configure your SnapperGPS receiver or upload data from your SnapperGPS receiver for location estimation.",
+    "icons": [
+        {
+            "src": "images/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "images/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "images/icon-512-maskable.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "start_url": "https://snapper-gps.herokuapp.com/",
+    "display": "fullscreen",
+    "theme_color": "#5E2590",
+    "background_color": "#B390CF",
+    "categories": ["navigation", "education"],
+    "orientation": "any",
+    "shortcuts": [
+        {
+            "name": "Configure",
+            "url": "/configure",
+            "description": "Configure your SnapperGPS receiver for your next deployment"
+        },
+        {
+            "name": "Upload",
+            "url": "/upload",
+            "description": "Upload the data from your SnapperGPS receiver after a completed deployment"
+        },
+        {
+            "name": "Download",
+            "url": "/view",
+            "description": "View and download the track of your SnapperGPS receiver once processing is completed"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "images/Screenshot 2021-06-26 232450.avif",
+            "sizes": "300x172",
+            "type": "image/avif"
+        }
+    ]
+  }

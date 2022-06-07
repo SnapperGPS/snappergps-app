@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SnapperGPS - Upload</title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+        <div style="display: none;" id="upload-id" value="<%= uploadID %>"></div>
+
+        <!-- Nav bar -->
+        <%- include ('partials/navBar', {pageName: 'upload'}) %>
+
+        <!-- Main body -->
+        <main class="container">
+
+            <div class="row">
+                <div class="col">
+                    <h1>Upload successful</h1>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div class="row">
+                    <div class="col">
+                        <p>You have succesfully uploaded the data from your
+                            SnapperGPS receiver to the server.</p>
+                        <p>Once processing is complete,
+                            the estimated locations will be available by searching
+                            for the upload ID <a class="text-link" href="/view?uploadid=<%= uploadID %>"><%= uploadID %></a>.</p>
+                        <p id="notification-info">If you requested a push notification, then
+                            we will send you one when we are done.</p>
+                        <p id="email-info">If you provided an e-mail address, then we will
+                            notify you when we are done.</p>
+                        <p>You can also send your upload ID to our
+                            Telegram bot
+                            <a class="text-link" href="https://t.me/SnapperGPSBot?start=<%= uploadID %>">@SnapperGPSBot</a>
+                            for updates about the processing progress.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col">
+                    <a class="text-link" href="/upload">Back</a>
+                </div>
+            </div>
+
+        </main>
+
+    </body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script>
+        const url = new URL(window.location.href);
+        const email = url.searchParams.get("email");
+        if (email.indexOf('@') > -1) {
+            document.getElementById("email-info").innerHTML
+                = "We will send an email with the link to <b><i>" + email + "</i></b> when processing is complete.";
+        } else {
+            document.getElementById("email-info").innerHTML
+                = "Since you did not provide a valid email address, you will not receive an email when processing is complete.";
+        }
+        const pushNotification = url.searchParams.get("push");
+        if (pushNotification === 'true') {
+            document.getElementById("notification-info").innerHTML
+                = "We will send you a push notification to this device when processing is complete.";
+        } else {
+            document.getElementById("notification-info").innerHTML
+                = "Since you did not check the corresponding box, you will not receive a push notification when processing is complete.";
+        }
+    </script>
+
+</html>

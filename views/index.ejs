@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SnapperGPS - Home</title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="manifest" href="snappergps.webmanifest">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Home page of SnapperGPS - A small, low-cost, low-power wildlife tracking system.">
+        <meta name="theme-color" content="#5E2590">
+        <link rel="apple-touch-icon" href="images/icon-512-pink.png">
+    </head>
+    <body>
+
+        <!-- Nav bar -->
+        <%- include ('partials/navBar', {pageName: 'home'}) %>
+
+        <!-- Main body -->
+        <main class="container">
+
+            <div class="row">
+                <div class="col">
+                    <h1>Home</h1>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div class="row btnrow"></div>
+                <div class="col-sm btncol">
+                    <div class="card text-center" style="height: 100%">
+                        <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                            <h5 class="card-title">Configure</h5>
+                            <p class="card-text">
+                                Configure your SnapperGPS receiver for your next deployment.
+                            </p>
+                            <a href="/configure" class="btn btn-primary">Go</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm btncol">
+                    <div class="card text-center" style="height: 100%">
+                        <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                            <h5 class="card-title">Upload</h5>
+                            <p class="card-text">Upload the data from your SnapperGPS receiver after a
+                                completed deployment.</p>
+                            <a href="/upload" class="btn btn-primary">Go</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm btncol">
+                    <div class="card text-center" style="height: 100%">
+                        <div class="card-body d-flex flex-column justify-content-between align-items-center">
+                            <h5 class="card-title">Download</h5>
+                            <p class="card-text">
+                                View and download the track of your
+                                SnapperGPS receiver
+                                once processing is completed.</p>
+                            <a href="/view" class="btn btn-primary">Go</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div class="row" style="margin-bottom: 0px;">
+                    <div class="col">
+                        <h2>The SnapperGPS Receiver</h2>
+                        The SnapperGPS receiver is a small, low-cost, and low-power GNSS receiver for non-real-time wildlife tracking.
+                        It employs the snapshot GNSS technology,
+                        which offloads the computational expensive data processing
+                        to the cloud, and:
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 0px;">
+                    <div class="col-auto">
+                        <ul>
+                            <li>Measures just 32.0 mm x 27.3 mm,</li>
+                            <li>Operates for years on a tiny 110 mAh battery,</li>
+                            <li>Has enough memory to provide almost 11,000 position fixes,</li>
+                            <li>Captures fixes in user-defined time intervals or externally triggered,</li>
+                            <li>Needs only 12 ms of signal reception for a fix,</li>
+                            <li>Employs multiple satellite systems for high reliability (GPS, Galileo, and BeiDou),</li>
+                            <li>Achieves a median real-world tracking accuracy of about 12 m,</li>
+                            <li>Maintains a real-time clock to accurately timestamp the fixes,</li>
+                            <li>Measures the temperature in addition, and</li>
+                            <li>Is configured via USB in your browser without the need to install a driver or an app.</li>
+                        </ul>
+                    </div>
+                    <div class="col justify-content-center align-self-center" style="text-align: center;">
+                        <img src="images/SnapperGPS_board_2.0.avif" class="shadow" style="max-width: 100px" alt="SnapperGPS board">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div class="row" style="margin-bottom: 0px;">
+                    <div class="col">
+                        <h2>Workflow</h2>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 0px;">
+                    <div class="col-auto">
+                        <ol>
+                            <li>Get your SnapperGPS receiver.</li>
+                            <li><a href="/configure" class="text-link">Configure</a> your SnapperGPS receiver in your browser for your deployment.</li>
+                            <li>Deploy your SnapperGPS receiver.</li>
+                            <li>The SnapperGPS receiver captures GNSS snapshots according to your configuration.</li>
+                            <li>Recover your SnapperGPS receiver.</li>
+                            <li><a href="/upload" class="text-link">Upload</a> the data from your SnapperGPS receiver to our server.</li>
+                            <li><a href="/view" class="text-link">Download</a> the track of your surveilled animal.</li>
+                        </ol>
+                    </div>
+                    <div class="col justify-content-center align-self-center" style="text-align: center;">
+                        <img src="images/Screenshot 2021-06-26 232450.avif" class="shadow" style="max-width: 300px" alt="Exemplary SnapperGPS track">
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="row bg-light">
+                <div class="row">
+                    <div class="col">
+                        <h2>Get Yours</h2>
+                        Coming soon.
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="row bg-light">
+                <div class="row">
+                    <div class="col">
+                        <h2>Resources</h2>
+                        <ul>
+                            <li>Exemplary GNSS data collected with SnapperGPS receivers in the public <a class="text-link" href="https://doi.org/10.5287/bodleian:eXrp1xydM">Oxford University Research Archive</a>.</li>
+                            <li>Our snapshot GNSS location estimation algorithms on <a class="text-link" href="https://github.com/JonasBchrt/snapshot-gnss-algorithms">GitHub</a>.</li>
+                            <li>SnapperGPS on <a class="text-link" href="https://github.com/SnapperGPS">GitHub</a>.</li>
+                            <li>@SnapperGPS on <a class="text-link" href="https://twitter.com/SnapperGPS">Twitter</a>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div class="row">
+                    <div class="col">
+                        <h2>Publications</h2>
+                        <h3><i>2021</i></h3>
+                        <ul style="list-style-type:none;">
+                            <li style="margin-bottom:1em">
+                                Amanda Matthes and Jonas Beuchert.
+                                2021.
+                                Can we locate endangered 
+                                sea turtles using twelve 
+                                milliseconds of noisy satellite 
+                                signals?
+                                In <i>Inspired Research: News from the Department of Computer Science, University of Oxford.</i>
+                                Oxford, UK, Issue 19 (Winter 2021), Pages 20-21.
+                                <a class="text-link" href="https://www.cs.ox.ac.uk/innovation/inspiredresearch/InspiredResearch-winter2021.pdf">https://www.cs.ox.ac.uk/innovation/inspiredresearch/InspiredResearch-winter2021.pdf</a>.
+                            </li>
+                            <li style="margin-bottom:1em">
+                                Jonas Beuchert and Alex Rogers.
+                                2021.
+                                SnapperGPS: Algorithms for Energy-Efficient Low-Cost Location Estimation Using GNSS Signal Snapshots.
+                                In <i>SenSys ’21: ACM Conference on Embedded Networked Sensor Systems, November, 2021, Coimbra, Portugal.</i>
+                                ACM, New York, NY, USA, Pages 165-177.
+                                <a class="text-link" href="https://doi.org/10.1145/3485730.3485931">https://doi.org/10.1145/3485730.3485931</a>.
+                            </li>
+                            <li>
+                                Jonas Beuchert and Alex Rogers.
+                                2021.
+                                SnapperGPS: Collection of GNSS Signal Snapshots.
+                                University of Oxford, Oxford, UK.
+                                <a class="text-link" href="https://doi.org/10.5287/bodleian:eXrp1xydM">https://doi.org/10.5287/bodleian:eXrp1xydM</a>.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div class="row">
+                    <div class="col">
+                        <h2>Troubleshooting</h2>
+                        <ul>
+                            <li>
+                                <a data-bs-toggle="collapse" href="#faq-0" role="button" aria-expanded="false" aria-controls="collapseExample" class="text-link">
+                                    The SnapperGPS website does not recognise my connected SnapperGPS receiver.
+                                </a>
+                                <ul class="collapse" id="faq-0">
+                                    <li>Verify that your SnapperGPS receiver is not
+                                        paired with another browser tab or window already.
+                                    </li>
+                                    <li>Check your browser version and ensure that it is among
+                                        <a class=text-link href="https://developer.mozilla.org/en-US/docs/Web/API/USB#browser_compatibility">
+                                            the ones that support the WebUSB technology</a>.
+                                    </li>
+                                    <li>Make sure that your USB cable supports data transmission,
+                                        i.e., is not a power-only cable that can only be employed
+                                        to charge USB devices.
+                                    </li>
+                                    <li>Avoid using a USB hub.
+                                    </li>
+                                    <li>If you have an operating system of the Linux family such as Ubuntu,
+                                        then make sure that you followed the steps
+                                        <a class=text-link href="#faq-1">
+                                            below</a>.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="collapse" href="#faq-1" role="button" aria-expanded="false" aria-controls="collapseExample" class="text-link">
+                                    Additional steps on Ubuntu as an exemplary Linux operating system.
+                                </a><ul class="collapse" id="faq-1">
+                                    <li>Create a file /etc/udev/rules.d/50-SnapperGPS.rules, e.g., with
+                                        <br><i><b>sudo nano /etc/udev/rules.d/50-SnapperGPS.rules</b></i>
+                                        <br>in your terminal.</li>
+                                    <li>Add the following two lines to the file:
+                                        <br><i><b>SUBSYSTEM=="usb", ATTR{idVendor}=="10c4", MODE="666", GROUP="plugdev"</b></i>
+                                        <br>and
+                                        <br><i><b>SUBSYSTEM=="usb", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="0002", DRIVER=="usbhid", ACTION=="add", ATTR{authorized}="0"</b></i>
+                                        <br>and save your changes.
+                                    </li>
+                                    <li>Restart the device manager with
+                                        <br><i><b>sudo service udev restart</i></b>
+                                    </li>
+                                    <li>Plug in your SnapperGPS receiver again.</li>
+                                    <li>Add your user account to the group that you just created
+                                        with
+                                        <br><i><b>sudo adduser your_username plugdev</i></b></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="collapse" href="#faq-2" role="button" aria-expanded="false" aria-controls="collapseExample" class="text-link">
+                                    The fraction of successful position fixes is low /
+                                    I do not get any successful fixes.
+                                </a><ul class="collapse" id="faq-2">
+                                    <li>Make sure that the antenna was outdoors
+                                        and had a sufficient view of the sky
+                                        at your selected start time.
+                                    </li>
+                                    <li>Check the connection between your antenna
+                                        and your SnappperGPS receiver.
+                                    </li>
+                                    <li>Avoid proximity to other electronic devices
+                                        that emit electromagnetic waves such as
+                                        WiFi routers or laptops when recording data.
+                                    </li>
+                                    <li>
+                                        Do not replace the antenna too often.
+                                        SnapperGPS' antenna connector is rated for only 30 mating cycles.
+                                        Frequent antenna replacements harm signal quality.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="collapse" href="#faq-5" role="button" aria-expanded="false" aria-controls="collapseExample" class="text-link">
+                                    I uploaded data that my SnapperGPS receiver
+                                    recorded today and the accuracy of the fixes
+                                    is bad / the fraction of successful fixes is
+                                    low.
+                                </a><ul class="collapse" id="faq-5">
+                                    <li>To estimate locations for your data, we
+                                        obtain information about the positions
+                                        of the navigation satellite locations at
+                                        the time of you recording from an
+                                        external source. If you uploaded your
+                                        data close to the point in time when it
+                                        was recorded, then the satellite data
+                                        might occasionally be imprecise, which
+                                        causes worse location estimates. Upload
+                                        that data again tomorrow.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="collapse" href="#faq-3" role="button" aria-expanded="false" aria-controls="collapseExample" class="text-link">
+                                    My SnapperGPS receiver stopped recording data at some point.
+                                </a><ul class="collapse" id="faq-3">
+                                    <li>Verify that your batteries did not completely discharge,
+                                        e.g., by downloading the data from your SnapperGPS receiver,
+                                        which includes a record of the battery voltage.
+                                    </li>
+                                    <li>Check if your SnappperGPS receiver got wet.
+                                    </li>
+                                    <li>A standard SnapperGPS receiver cannot
+                                        record data for more than 10,901 locations.
+                                        Ensure that this limit was not reached.
+                                    </li>
+                                    <li>Be sure that the start and end time on
+                                        the configuration page as well as on the upload page
+                                        were correctly set.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="collapse" href="#faq-4" role="button" aria-expanded="false" aria-controls="collapseExample" class="text-link">
+                                    The meaning of the LED patterns.
+                                </a><ul class="collapse" id="faq-4">
+                                    <li>If your SnapperGPS receiver is connected
+                                        to a host device and recognises it, then
+                                        the green LED will permanently glow.
+                                    </li>
+                                    <li>If you interact with your SnapperGPS receiver
+                                        via the SnapperGPS website, then the red LED
+                                        will glow in addition.</li>
+                                    <li>If you unplug your configured SnapperGPS receiver
+                                        and its battery is not discharged,
+                                        then the green LED will flash several times
+                                        to indicate that it will record data soon.
+                                    </li>
+                                    <li>If you unplug your unconfigured SnapperGPS receiver
+                                        and its battery is not discharged,
+                                        then the red LED will flash several times
+                                        to indicate that it will fall into deep sleep mode.
+                                    </li>
+                                    <li>If your configured SnapperGPS receiver
+                                        is not connected to a host device and
+                                        has not started to record data, then
+                                        both, the red and the green LED, will
+                                        flash every five seconds.
+                                    </li>
+                                    <li>Whenever your SnapperGPS receiver
+                                        captures a satellite signal snapshot,
+                                        the green LED will flash once.
+                                    </li>
+                                    <li>After your SnapperGPS receiver has
+                                        captured its last satellite signal
+                                        snapshot, the red LED will flash several times
+                                        to indicate that it will fall into deep sleep mode.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="collapse" href="#faq-6" role="button" aria-expanded="false" aria-controls="collapseExample" class="text-link">
+                                    How to install the SnapperGPS app.
+                                </a><ul class="collapse" id="faq-6">
+                                    <li>The SnapperGPS app is fully functional
+                                        in a browser like Microsoft Edge or
+                                        Google Chrome. Strictly speaking, there
+                                        is no need to download and install the
+                                        app. The browser version even works
+                                        offline as long as you do not clear your
+                                        browser cache.
+                                        However, you might find it more
+                                        convenient to install the app.
+                                        For this, open this website in Microsoft
+                                        Edge or Google Chrome and proceed with
+                                        one of the three following options,
+                                        depending on which one is available to
+                                        you:
+                                    </li>
+                                    <li>A) If you see a pop-up <i>Add SnapperGPS
+                                        to Home screen</i>, click on it.
+                                    </li>
+                                    <li>B) If you have an icon <i>App available.
+                                        Install SnapperGPS</i> in the right of
+                                        your address bar, click on it.
+                                    </li>
+                                    <li>C) Click on the three dots in the
+                                        top-right corner of your browser. Then,
+                                        click on <i>Install app</i> or on
+                                        <i>Apps</i> first and then on <i>Install
+                                        SnapperGPS</i>.
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div class="row">
+                    <!-- <div class="col" style="margin-bottom: 0px;"> -->
+                    <div class="col">
+                        <h2>The Team</h2>
+                        SnapperGPS is developed by
+                        <a class="text-link" href="https://amanda-matthes.github.io/">
+                            Amanda Matthes</a>,
+                        <a class="text-link" href="https://users.ox.ac.uk/~kell5462/">
+                            Jonas Beuchert</a>, and
+                        <a class="text-link" href="https://www.cs.ox.ac.uk/people/alex.rogers/">
+                            Alex Rogers</a>
+                        in the Department of Computer Science
+                        of the University of Oxford.
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bg-white">
+                <div class="col">
+                    <a class="text-link" href="/privacy">Privacy policy</a>
+                </div>
+            </div>
+
+        </main>
+
+    </body>
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script>
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker
+                    .register('/service-worker.js')
+                    .then(function() { console.log("Service worker registered."); });
+        }
+        </script>
+</html>

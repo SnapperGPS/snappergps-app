@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SnapperGPS - Download</title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="View and download the track of your SnapperGPS receiver once processing is completed.">
+    </head>
+    <body>
+
+        <!-- Nav bar -->
+        <%- include ('partials/navBar', {pageName: 'download'}) %>
+
+        <!-- Main body -->
+        <main class="container">
+
+            <div class="row">
+                <div class="col">
+                    <h1>View and download the track of your SnapperGPS receiver
+                        once processing is completed</h1>
+                </div>
+            </div>
+
+            <div class="row bg-white">
+                
+                <% if (displayError) { %>
+                    <div id="error-display">
+                        <div class="card text-white bg-danger mb-3" style="max-width: 100%;">
+                            <div class="card-header"><b>Error</b></div>
+                            <div class="card-body">
+                                <p class="card-text" id="error-text">
+                                    We could not find any data with your
+                                    upload ID <i><%= uploadID %></i>. Please double check and try again.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        Enter your upload ID to view your track.
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <div class="input-group">
+                            <input id="id-input" style="width: 8em;">
+                            <button id="search-button" class="btn btn-primary">Search</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        To view some exemplary tracks, try
+                        <a class="text-link" href="/view?uploadid=54aa528c53">54aa528c53</a>,
+                        <a class="text-link" href="/view?uploadid=8858a357ec">8858a357ec</a>,
+                        <a class="text-link" href="/view?uploadid=24edc41380">24edc41380</a>,
+                        <a class="text-link" href="/view?uploadid=82c0af8991">82c0af8991</a>,
+                        <a class="text-link" href="/view?uploadid=a59d40be7a">a59d40be7a</a>,
+                        <a class="text-link" href="/view?uploadid=14505f3faa">14505f3faa</a>,
+                        <a class="text-link" href="/view?uploadid=2127c52253">2127c52253</a>,
+                        <a class="text-link" href="/view?uploadid=2f2723281e">2f2723281e</a>,
+                        <a class="text-link" href="/view?uploadid=8eb55d66dc">8eb55d66dc</a>,
+                        <a class="text-link" href="/view?uploadid=b8448ce081">b8448ce081</a>,
+                        <a class="text-link" href="/view?uploadid=db1fa7ab21">db1fa7ab21</a>, or
+                        <a class="text-link" href="/view?uploadid=8821aa36c3">8821aa36c3</a>.
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="js/view/searchUI.js"></script>
+
+</html>

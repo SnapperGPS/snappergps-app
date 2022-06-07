@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SnapperGPS - Download</title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css"/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+        <div style="display: none;" id="upload-id" value="<%= uploadID %>"></div>
+
+        <!-- Nav bar -->
+        <%- include ('partials/navBar', {pageName: 'download'}) %>
+
+        <!-- Main body -->
+        <main class="container">
+
+            <div class="row">
+                <div class="col">
+                    <h1>View and download your track - <%= uploadID %>
+                        <div class="spinner-border" role="status" id="download-spinner" style="margin-left: 10px;"></div>
+                    </h1>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div class="col">
+                    <div id="display-map" style="height: 400px;"></div>
+                    <!-- Twitter banner size -->
+                    <!-- <div id="display-map" style="height: 500px; width: 1500px;"></div> -->
+                </div>
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row btnrow">
+                    <div class="col-auto btncol">
+                        <label for="start-date-input" style="margin-right: 10px;">Start:</label>
+                        <input id="start-date-input" disabled type="date">
+                        <input id="start-time-input" disabled type="time" value="00:00">
+                        <label id="start-timezone" for="start-time-input">UTC</label>
+                    </div>
+                    <div class="col-auto btncol">
+                        <label for="end-date-input" style="margin-right: 10px;">End:</label>
+                        <input id="end-date-input" disabled type="date">
+                        <input id="end-time-input" disabled type="time" value="00:00">
+                        <label id="end-timezone" for="end-time-input">UTC</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+                <div class="btnrow" style="margin-top: 10px">
+                    <div class="col">
+                        <button class="btn btn-primary btncol quarter-width half-width full-width" id="download-csv-button" disabled style="min-width: 175px">Download CSV</button>
+                        <button class="btn btn-primary btncol quarter-width half-width full-width" id="download-geojson-button" disabled style="min-width: 175px">Download GeoJSON</button>
+                        <button class="btn btn-primary btncol quarter-width half-width full-width" id="download-kml-button" disabled style="min-width: 175px">Download KML</button>
+                        <button class="btn btn-primary btncol quarter-width half-width full-width" id="download-json-button" disabled style="min-width: 175px">Download JSON</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div>
+                    <div class="card text-dark bg-light-card mb-3" style="width: 100%">
+                        <div class="card-header">
+                            Receiver ID: <span id="device-id-display">-</span>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Upload date/time: <span id="upload-date-display">-</span></li>
+                            <li class="list-group-item">Processed snapshots: <span id="processed-position-count-display">-</span></li>
+                            <li class="list-group-item">Estimates without confidence: <span id="percentage-lbl">-</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bg-white">
+                <div class="col">
+                    <a class="text-link" href="/view">Back</a>
+                </div>
+            </div>
+
+        </main>
+
+    </body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="js/serverCommunication.js"></script>
+    <script src="js/view/viewComms.js"></script>
+    <script src="js/view/viewUI.js"></script>
+
+</html>
