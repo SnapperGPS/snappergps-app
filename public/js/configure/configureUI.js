@@ -40,7 +40,7 @@ const batteryWarningDisplay = document.getElementById('battery-warning-display')
 const statusInfo = document.getElementById('status-info');
 let globalStartDate = null;
 
-const CURRENT_FIRMWARE_DESCRIPTION = 'SnapperGPS-Test-Board-2'; // TODO
+const CURRENT_FIRMWARE_DESCRIPTION = 'SnapperGPS-Basic'; // TODO
 
 const CURRENT_FIRMWARE_VERSION = '0.0.6'; // TODO
 
