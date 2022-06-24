@@ -116,7 +116,7 @@ git push heroku main
 ```shell
 heroku addons:create heroku-postgresql:hobby-dev
 ```
-* Obtain and note down the URL, the name, the user, and the password for the database from the follwoing command, which returns a URL with the structure `postgres://database_user:database_password@database_url:port/database_name`:
+* Obtain and note down the URL, the name, the user, and the password for the database from the following command, which returns a URL with the structure `postgres://database_user:database_password@database_url:port/database_name`:
 ```shell
 heroku config
 ```
@@ -144,24 +144,23 @@ If you want to do so, pay attention to the following points:
 * The SnapperGPS app requires HTTPS.
 * In general, follow the same steps as for a Heroku-hosted app.
 
-
 ## Database
 
 The SQL file [`snappergps_db_schema.sql`](snappergps_db_schema.sql) describes the schema of the [PosgreSQL](https://www.postgresql.org/) database.
 It consists of four tables:
 
 * `uploads` has a single row for every user upload, either directly from a SnapperGPS receiver or from a file. It contains meta data like an upload timestamp `datetime`, the ID of the SnapperGPS receiver `device_id`, and the unique `upload_id` that identifies this upload. In addition, it optionally holds information to communicate the processing progress to the user, including an `email` address, a push notification `subscription`, and a Telegram `chat_id`. Finally, there is also data set by the processing back-end, e.g., the `status` of the processing.
-* `snapshots` has a single row for each uploaded GNSS signal snapshot. Each row is identified by a unique `snapshot_id` and linked to an upload via an `upload_id`. Besides that each row holds a measurement timestamp `datetime` in UTC, the raw signal snapshot `data` where each bit represents an amplitude measurement and the bit-order is little, a `temperature` measurement from the MCU in degrees Celcius, and a `battery` voltage measurement in volts.
+* `snapshots` has a single row for each uploaded GNSS signal snapshot. Each row is identified by a unique `snapshot_id` and linked to an upload via an `upload_id`. Besides that each row holds a measurement timestamp `datetime` in UTC, the raw signal snapshot `data` where each bit represents an amplitude measurement and the bit-order is little, a `temperature` measurement from the MCU in degrees Celsius, and a `battery` voltage measurement in volts.
 * `reference_points` has a single row for each user-provided starting point, described by latitude `lat` and longitude `lng` and linked to an upload via an `upload_id`.
 * `positions` is populated by the processing back-end with position estimates consisting of `estimated_lat` and `estimated_lng` in decimal degrees. In addition, each row contains an `estimated_time_correction` in seconds and an uncertainty estimate `estimated_horizontal_error`. Each row is linked to a signal snapshot via a `snapshot_id`.
 
 ## Files
 
-Instead of uploading data directly to the database, the users can choose to transfer the data from their SnapperGPS receiver to their host computer and store it in a local file. This is done via the *Upload* view, too. Two file formats are available. The legacy file format consisting of a CSV file with meta data and an individual binary file for each snapshot in a ZIP-compressed directory is described in [*snapshot-gnss-data*](https://github.com/JonasBchrt/snapshot-gnss-data). The alternative is a single (mostly) human-readable JSON file for a whole recording that contains a little bit of meta data (`deviceID`, `firmwareDescription`, `firmwareVersion`) and an array of individual GNSS signal `snapshots`. Each snapshot is defined by a measurement `timestamp` in UTC, a `temperature` measurement in degrees Celcius, a `batteryVoltage` measurement in volts, and the actual `data`. The latter are the raw signal amplitudes with one bit per value. The values are stored as byte stream where the bit order is little and which is encoded using [Base64](https://developer.mozilla.org/en-US/docs/Glossary/Base64).
+Instead of uploading data directly to the database, the users can choose to transfer the data from their SnapperGPS receiver to their host computer and store it in a local file. This is done via the *Upload* view, too. Two file formats are available. The legacy file format consisting of a CSV file with meta data and an individual binary file for each snapshot in a ZIP-compressed directory is described in [*snapshot-gnss-data*](https://github.com/JonasBchrt/snapshot-gnss-data). The alternative is a single (mostly) human-readable JSON file for a whole recording that contains a little bit of meta data (`deviceID`, `firmwareDescription`, `firmwareVersion`) and an array of individual GNSS signal `snapshots`. Each snapshot is defined by a measurement `timestamp` in UTC, a `temperature` measurement in degrees Celsius, a `batteryVoltage` measurement in volts, and the actual `data`. The latter are the raw signal amplitudes with one bit per value. The values are stored as byte stream where the bit order is little and which is encoded using [Base64](https://developer.mozilla.org/en-US/docs/Glossary/Base64).
 
 ## WebUSB messages
 
-The SnapperGPS web app uses the WebUSB API to securly communicate with a SnapperGPS receiver.
+The SnapperGPS web app uses the WebUSB API to securely communicate with a SnapperGPS receiver.
 The custom USB messages are defined in the readme of [*snappergps-firmware*](https://github.com/SnapperGPS/snappergps-firmware).
 
 ## Offline mode
@@ -171,8 +170,9 @@ Three views of the web app run offline: *Home*, *Configure*, and *Upload*. This 
 ## Further notes
 
 * If you want to run the app locally before you deploy it on a server (probably a good idea), then you can find information how to do it [here](https://devcenter.heroku.com/articles/getting-started-with-nodejs#run-the-app-locally). For this, you need Node.js and npm on your machine.
-* If you add new ressources (files) that shall be part of the offline version of the app, then make sure that the service worker caches them (see above).
+* If you add new resources (files) that shall be part of the offline version of the app, then make sure that the service worker caches them (see above).
 * Note that the Python back-end is not part of this repository. To process snapshots that you have uploaded to the database, you need to run the script `process_queue.py`. This requires maintaining a local navigation database, which you can achieve with `maintain_navigation_data.py`. For more information, see the readme in [the respective repository](https://github.com/SnapperGPS/snappergps-backend).
+* If you want to release the app in an app store such as Google Play or the Microsoft Store, then you can use the [PWA builder](https://www.pwabuilder.com/) to package it. Afterwards, follow [these instructions](https://github.com/pwa-builder/CloudAPK/blob/master/Next-steps.md) to publish it on Google Play or [these instructions](https://github.com/pwa-builder/pwabuilder-windows-chromium-docs/blob/master/next-steps.md) for the Microsoft Store.
 
 ## Acknowledgements
 
