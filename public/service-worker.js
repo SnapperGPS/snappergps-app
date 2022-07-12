@@ -116,7 +116,7 @@ self.addEventListener('push', function (event) {
         // as the body.
         self.registration.showNotification('SnapperGPS - ' + uploadID, {
             // body: 'I have processed your data. You can go to ' +
-            //       'https://snapper-gps.herokuapp.com/view?uploadid=' +
+            //       'https://snappergps.info/view?uploadid=' +
             //       uploadID + ' to view and download your track.',
             body: 'I have processed your data. Click here ' +
                   'to view and download your track.',
@@ -137,7 +137,7 @@ self.addEventListener('notificationclick', function (event) {
     event.notification.close();
 
     event.waitUntil(
-        clients.openWindow('https://snapper-gps.herokuapp.com/view?uploadid=' +
+        clients.openWindow('https://snappergps.info/view?uploadid=' +
                            uploadID)
     );
 

@@ -42,7 +42,7 @@ let globalStartDate = null;
 
 const CURRENT_FIRMWARE_DESCRIPTION = 'SnapperGPS-Basic'; // TODO
 
-const CURRENT_FIRMWARE_VERSION = '0.0.6'; // TODO
+const CURRENT_FIRMWARE_VERSION = '0.0.7'; // TODO
 
 // Threshold to show low battery warning
 const batteryWarningThreshold = 2.0;
