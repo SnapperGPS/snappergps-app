@@ -104,6 +104,7 @@ heroku git:remote -a my-snappergps-app
 * Edit [public/js/upload/uploadUI.js](public/js/upload/uploadUI.js) and [public/js/view/viewUI.js](public/js/view/viewUI.js) and set the variable `mapboxAccessToken` to your token.
 * To make push notifications work, [generate a VAPID key pair for you email address](https://www.google.com/search?q=generate+vapid+key).
 * Edit [public/js/upload/uploadUI.js](public/js/upload/uploadUI.js) and set the variable `vapidPublicKey` to your public key.
+* Fill in your privacy policy in [views/privacy.ejs](views/privacy.ejs).
 * Apply further desired changes to the source code of the SnapperGPS app.
 * Stage, commit, and push (deploy) your changes:
 ```shell
