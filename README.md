@@ -180,3 +180,6 @@ Three views of the web app run offline: *Home*, *Configure*, and *Upload*. This 
 Parts of the SnapperGPS web app are based on work by [Peter Prince](https://github.com/pcprince).
 
 [Amanda Matthes](https://github.com/amanda-matthes) owns the copyright of the current SnapperGPS logo/icon.
+
+SnapperGPS was funded by an EPSRC IAA Technology Fund (D4D00010-BL14).
+Jonas Beuchert and Amanda Matthes are funded by the EPSRC Centre for Doctoral Training in Autonomous Intelligent Machines and Systems (DFT00350-DF03.01, DFT00350-DF03.05).
