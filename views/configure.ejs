@@ -129,8 +129,9 @@
                         at a certain point in time in the future or want to end it early.
                         Otherwise, your SnapperGPS receiver will begin collecting
                         data immediately and will run as long as its battery and memory last.
-                        Starting at a point where your receiver is
-                        already outside helps to speed up post-processing.
+                        Ensure that you record the first couple of snapshots
+                        outdoors with good sky visibility since SnapperGPS uses
+                        them to calibrate your receiver.
                     </div>
                 </div>
 
@@ -205,6 +206,31 @@
                                 If you configure a receiver that is not connected to a charged battery,
                                 then your configuration will not be saved when you
                                 unplug your receiver.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="charge-warning-display" style="display: none;">
+                    <div class="card text-white bg-warning mb-3">
+                        <div class="card-header"><b>Warning</b></div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                Your battery does not seem to be fully charged.
+                                For a long deployment, we recommend charging your battery to around 4.1 V.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="card text-white bg-warning mb-3">
+                        <div class="card-header"><b>Warning</b></div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                We recommend that you record a little bit of test data with your SnapperGPS receiver
+                                in a setting similar to your intended deployment scenario first
+                                before you record more data over a longer period of time.
                             </p>
                         </div>
                     </div>
