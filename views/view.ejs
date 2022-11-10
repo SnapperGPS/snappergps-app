@@ -81,6 +81,45 @@
                 </div>
             </div>
 
+            <div id="processing-warning-display" style="display: none;">
+                <div class="card text-white bg-warning mb-3">
+                    <div class="card-header"><b>Warning</b></div>
+                    <div class="card-body">
+                        <p id="processing-warning-text" class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        Does your track look noisy?
+                        You can try to smooth it.
+                        First, remove outliers.
+                        For this, identify any outliers in the map above and click on their pink circles.
+                        Then, click <i>Remove</i>.
+                        Once you have removed all outliers, you can move the slider below.
+                        <br>
+                        <i>(Hint: You can display the track as line by ticking the box in the layer menu in the top right corner of the map.)</i>
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <input id="smooth-input" type="range" value="2" min="-4" max="2" step="0.1" class="form-range" style="direction: rtl;" disabled>
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <span id="smooth-span"></span>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none; margin-left: 5px" id="smooth-spinner"></span>          
+                    </div>
+                </div>
+
+            </div>
+
             <div class="row bg-white">
                 <div class="col">
                     <a class="text-link" href="/view">Back</a>
@@ -97,6 +136,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     <script src="js/serverCommunication.js"></script>
     <script src="js/view/viewComms.js"></script>
-    <script src="js/view/viewUI.js"></script>
+    <script type="module" src="js/view/viewUI.js"></script>
 
 </html>

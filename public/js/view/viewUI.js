@@ -3,6 +3,9 @@
  * March 2021
  *****************************************************************************/
 
+// Geodesy for smoothing
+import LatLon, { Nvector, Cartesian, Ned, Dms } from 'https://cdn.jsdelivr.net/npm/geodesy@2/latlon-nvector-ellipsoidal.js';
+
 /* global loadUploadData, getPositions, L */
 
 const mapboxAccessToken = 'pk.eyJ1Ijoiamdyb3Nza3JldXoiLCJhIjoiY2tseWIxNTRoMHFvODJxbHlyanRobzBmZiJ9.xz2KrKBy5MRCf9XLOOPdzA';
@@ -36,6 +39,15 @@ const endDateInput = document.getElementById('end-date-input');
 const startTimeInput = document.getElementById('start-time-input');
 const endTimeInput = document.getElementById('end-time-input');
 
+// Warning
+const processingWarningDisplay = document.getElementById('processing-warning-display');
+const processingWarningText = document.getElementById('processing-warning-text');
+
+// Smoothing
+const smoothInput = document.getElementById('smooth-input');
+const smoothSpinner = document.getElementById('smooth-spinner');
+const smoothSpan = document.getElementById('smooth-span');
+
 let startDateTime;
 let endDateTime;
 
@@ -63,7 +75,10 @@ const zebraIcon = L.icon({
     shadowSize: [41, 41]
 });
 
+// Positions (raw at first, later potentially smoothed)
 var positions = {};
+// Raw positions from database (although, some could have been removed)
+var raw_positions = {};
 
 /**
  * Request tile layer to display on a Leaflet map
@@ -190,9 +205,13 @@ function populateMap (positions) {
                     fillOpacity: 0.5,
                     radius: confidence,
                     stroke: false
-                }).addTo(map); // Add to map by default
+                });
                 // Add timestamp as popup to circle.
-                circle.bindPopup(date.toUTCString().replace('GMT', 'UTC'));
+                circle.bindPopup(
+                    date.toUTCString().replace('GMT', 'UTC') +
+                    '<br>' +
+                    '<button class="btn btn-primary btn-sm" onClick="removePosition(' + i + ')">Remove</button>'
+                );
                 // Place popup in the centre.
                 circle.on('click', ev => ev.target.openPopup(ev.target.getLatLng()));
                 // Add confidence circle to respective layer for easy disabling.
@@ -242,9 +261,47 @@ function populateMap (positions) {
                                     ).toFixed(1)
                                     + '%');
 
+        // Display warning if fix rate is low
+        if (pointList.length === 0) {
+            processingWarningDisplay.style.display = '';
+            processingWarningText.innerHTML = 'SnapperGPS did not find any confident location estimates for your uploaded snapshots. ' +
+                'Check the troubleshooting section on ' +
+                 "<a class='text-link' href='/'>the home page</a> " +
+                 'and the ' +
+                 "<a class='text-link' href='https://github.com/SnapperGPS/snappergps-pcb/discussions'>the discussions on GitHub</a> " +
+                 'to improve your results.';
+        } else if (pointList.length / positions.length < 0.7) {
+            processingWarningDisplay.style.display = '';
+            processingWarningText.innerHTML = 'SnapperGPS did not find confident location estimates for quite a few of your uploaded snapshots. ' +
+                'Check the troubleshooting section on ' +
+                 "<a class='text-link' href='/'>the home page</a> " +
+                 'and the ' +
+                 "<a class='text-link' href='https://github.com/SnapperGPS/snappergps-pcb/discussions'>the discussions on GitHub</a> " +
+                 'to improve your results.';
+        }
+
+        if (pointList.length > 0) {
+            enableOrDisableSmoothing(false);
+        }
+
     }
 
 }
+
+/**
+ * Create an encoded URI to download positions data
+ * @param {int} positionIdx Index of position to be removed
+ */
+function removePosition (positionIdx) {
+
+    positions[positionIdx].estimated_horizontal_error = null;
+
+    populateMap(positions);
+
+    raw_positions[positionIdx].estimated_horizontal_error = null;
+
+}
+window.removePosition = removePosition;
 
 /**
  * Create an encoded URI to download positions data
@@ -524,6 +581,10 @@ function enableOrDisableButtons (disableButtons) {
 
 }
 
+function enableOrDisableSmoothing (disableSmoothing) {
+    smoothInput.disabled = disableSmoothing;
+}
+
 startDateInput.addEventListener('change', () => {
 
     startDateTime = new Date(startDateInput.value + ' ' + startTimeInput.value + 'Z');
@@ -590,6 +651,174 @@ endTimeInput.addEventListener('change', () => {
 
     populateMap(positions);
 
+});
+
+smoothInput.addEventListener('change', () => {
+
+    // Indicate smoothing with spinning spinner
+    smoothSpinner.style.display = '';
+    smoothSpan.innerHTML = 'Smoothing';
+
+    // Disable all buttons during smoothing
+    enableOrDisableSmoothing(true);
+    enableOrDisableButtons(true);
+
+    // Get smoothing parameter
+    const sigma_noise = Math.pow(10, parseFloat(smoothInput.value));
+
+    if (sigma_noise === 100.0) {
+        console.log('Reset.')
+        positions = JSON.parse(JSON.stringify(raw_positions));
+    } else {
+        
+        const reference_latlon = new LatLon(referencePoints[0].lat, referencePoints[0].lng, 0.0);
+
+        let firstPlausiblePositionIdx = 0;
+        while (!isPositionPlausible(raw_positions[firstPlausiblePositionIdx]) && firstPlausiblePositionIdx < positions.length) { ++firstPlausiblePositionIdx };
+        console.log('First plausible position at index ' + firstPlausiblePositionIdx + '.');
+
+        if (firstPlausiblePositionIdx < positions.length) {
+
+            // State transition
+            const F = 1.0;
+
+            // Observation model
+            const H = 1.0;
+
+            // A priori state estimate at time k given observations up to and including at
+            // time k-1
+            const xn_prio = Array(positions.length).fill(NaN);
+            const xe_prio = Array(positions.length).fill(NaN);
+            // A priori estimate covariance matrix (a measure of the estimated accuracy of
+            // the state estimate)
+            const Pn_prio = Array(positions.length).fill(NaN);
+            const Pe_prio = Array(positions.length).fill(NaN);
+            // A posteriori state estimate at time k given observations up to and including
+            // at time k
+            const xn_post = Array(positions.length).fill(NaN);
+            const xe_post = Array(positions.length).fill(NaN);
+            // A posteriori estimate covariance matrix (a measure of the estimated accuracy
+            // of the state estimate)
+            const Pn_post = Array(positions.length).fill(NaN);
+            const Pe_post = Array(positions.length).fill(NaN);
+
+            // Initialise with 1st observation
+            const init_position = raw_positions[firstPlausiblePositionIdx];
+            const init_latlon = new LatLon(init_position.estimated_lat, init_position.estimated_lng, 0.0);
+            const init_ned = reference_latlon.deltaTo(init_latlon);
+            xn_post[0] = init_ned.north;
+            xe_post[0] = init_ned.east;
+            Pn_post[0] = init_position.estimated_horizontal_error / Math.sqrt(2);
+            Pe_post[0] = init_position.estimated_horizontal_error / Math.sqrt(2);
+
+            // Forward pass, same as regular Kalman filter
+            for (let k = 1; k < positions.length; ++k) {
+
+                // console.log('Forward pass ' + (k+1) + "/" + positions.length);
+
+                const position = raw_positions[k];
+                const prev_position = raw_positions[k-1];
+                const dT = position.timestamp - prev_position.timestamp;
+                // console.log('dT = ' + dT + ' s');
+
+                // Predicted (a priori) state estimate
+                xn_prio[k] = F * xn_post[k-1];  // KF
+                xe_prio[k] = F * xe_post[k-1];  // KF
+                // Covariance of process noise
+                const Q = sigma_noise * dT;
+                // Predicted (a priori) estimate covariance
+                Pn_prio[k] = F * Pn_post[k-1] * F + Q;
+                Pe_prio[k] = F * Pe_post[k-1] * F + Q;
+
+                // Check if observation is valid
+                if (isPositionPlausible(position)) {
+
+                    // Observation
+                    const latlon = new LatLon(position.estimated_lat, position.estimated_lng, 0.0);
+                    const ned = reference_latlon.deltaTo(latlon);
+                    const zn = ned.north;
+                    const ze = ned.east;
+
+                    // Innovation or measurement pre-fit residual
+                    const yn = zn - H * xn_prio[k];
+                    const ye = ze - H * xe_prio[k];
+                    // Covariance of observation noise
+                    const R = position.estimated_horizontal_error / Math.sqrt(2);
+                    // Innovation (or pre-fit residual) covariance
+                    const Sn = H * Pn_prio[k] * H + R;
+                    const Se = H * Pe_prio[k] * H + R;
+                    // Optimal Kalman gain
+                    const Kn = Pn_prio[k] * H * (1.0 / Sn);
+                    const Ke = Pe_prio[k] * H * (1.0 / Se);
+                    // Updated (a posteriori) state estimate
+                    xn_post[k] = xn_prio[k] + Kn * yn;
+                    xe_post[k] = xe_prio[k] + Ke * ye;
+                    // Updated (a posteriori) estimate covariance
+                    Pn_post[k] = (1.0 - Kn * H) * Pn_prio[k];
+                    Pe_post[k] = (1.0 - Ke * H) * Pe_prio[k];
+
+                } else {
+
+                    // Ignore invalid observation, just propagate state
+                    xn_post[k] = xn_prio[k];
+                    xe_post[k] = xe_prio[k];
+                    Pn_post[k] = Pn_prio[k];
+                    Pe_post[k] = Pe_prio[k];
+
+                }
+
+            }
+
+            // Smoothed state estimates
+            const xn_smooth = Array(positions.length).fill(NaN);
+            const xe_smooth = Array(positions.length).fill(NaN);
+            // Smoothed covariances
+            const Pn_smooth = Array(positions.length).fill(NaN);
+            const Pe_smooth = Array(positions.length).fill(NaN);
+            
+            // Initialise with last filtered estimate
+            xn_smooth[positions.length-1] = xn_post[positions.length-1];
+            xe_smooth[positions.length-1] = xe_post[positions.length-1];
+            Pn_smooth[positions.length-1] = Pn_post[positions.length-1];
+            Pe_smooth[positions.length-1] = Pe_post[positions.length-1];
+            
+            // Backward pass
+            for (let k = positions.length - 2; k >= 0; --k) {
+                // console.log('Backward pass ' + (positions.length - k) + "/" + positions.length);
+                const Cn = Pn_post[k] * F * (1.0 / Pn_prio[k+1]);
+                const Ce = Pe_post[k] * F * (1.0 / Pe_prio[k+1]);
+                xn_smooth[k] = xn_post[k] + Cn * (xn_smooth[k+1] - xn_prio[k+1]);
+                xe_smooth[k] = xe_post[k] + Ce * (xe_smooth[k+1] - xe_prio[k+1]);
+                Pn_smooth[k] = Pn_post[k] + Cn * (Pn_smooth[k+1] - Pn_prio[k+1]) * Cn;
+                Pe_smooth[k] = Pe_post[k] + Ce * (Pe_smooth[k+1] - Pe_prio[k+1]) * Ce;
+            }
+
+            // Convert to latitude/longitude
+            for (let i = 0; i < positions.length; ++i) {
+                const ned = new Ned(xn_smooth[i], xe_smooth[i], 0.0);
+                const latlon = reference_latlon.destinationPoint(ned);
+                positions[i].estimated_lat = latlon._lat;
+                positions[i].estimated_lng = latlon._lon;
+                positions[i].estimated_horizontal_error = Math.sqrt(Math.pow(Pn_smooth[i], 2) + Math.pow(Pe_smooth[i], 2));
+            }
+
+        } else {
+
+            console.log('Could not find plausible position.');
+
+        }
+    }
+
+    // Update map with smoothed track
+    populateMap(positions);
+
+    // Enable all buttons again
+    enableOrDisableSmoothing(false);
+    enableOrDisableButtons(false);
+
+    // Stop spinner
+    smoothSpinner.style.display = 'none';
+    smoothSpan.innerHTML = '';
 });
 
 // Prepare page by first loading the map
@@ -661,6 +890,15 @@ getInformation(() => {
 
         // Disable spinner when not loading
         downloadSpinner.style.display = 'none';
+
+        // Display warning if no snpahsots processed
+        if (processedPositionCount === null || processedPositionCount === 0) {
+            processingWarningDisplay.style.display = '';
+            processingWarningText.innerHTML = 'SnappperGPS has not processed your snapshots yet.';
+        }
+
+        // Remember raw positions from database
+        raw_positions = JSON.parse(positionRes).positions;
 
     });
 

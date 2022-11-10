@@ -90,6 +90,42 @@ body {
     overflow-wrap: break-word;
 }
 
+.form-range::-webkit-slider-thumb {
+    background: var(--aims-purple);
+  }
+  
+.form-range::-moz-range-thumb {
+    background: var(--aims-purple);
+}
+
+.form-range::-ms-thumb {
+    background: var(--aims-purple);
+}
+
+.form-range:focus::-webkit-slider-thumb {
+    box-shadow: var(--aims-pink);
+}
+
+.form-range:focus::-moz-range-thumb {
+    box-shadow: var(--aims-pink);
+}
+
+.form-range:focus::-ms-thumb {
+    box-shadow: var(--aims-pink);
+}
+
+.form-range::-webkit-slider-thumb:active {
+    background-color: var(--aims-pink);
+}
+
+.form-range::-moz-range-thumb:active {
+  background-color: var(--aims-pink);
+}
+
+.form-range::-ms-thumb:active {
+  background-color: var(--aims-pink);
+}
+
 /* On very small screens, make buttons full width */
 @media(max-width: 575.98px) {
     button.full-width {
