@@ -81,7 +81,7 @@
                             <li>Captures fixes in user-defined time intervals or externally triggered,</li>
                             <li>Needs only 12 ms of signal reception for a fix,</li>
                             <li>Employs multiple satellite systems for high reliability (GPS, Galileo, and BeiDou),</li>
-                            <li>Achieves a median real-world tracking accuracy of about 12 m,</li>
+                            <li>Achieves a median real-world tracking accuracy of about 12 m (before smoothing),</li>
                             <li>Maintains a real-time clock to accurately timestamp the fixes,</li>
                             <li>Measures the temperature in addition, and</li>
                             <li>Is configured via USB in your browser without the need to install a driver or an app.</li>
@@ -102,7 +102,7 @@
                 <div class="row" style="margin-top: 0px;">
                     <div class="col-auto">
                         <ol>
-                            <li>Get your SnapperGPS receiver.</li>
+                            <li>Get/build your SnapperGPS receiver.</li>
                             <li><a href="/configure" class="text-link">Configure</a> your SnapperGPS receiver in your browser for your deployment.</li>
                             <li>Deploy your SnapperGPS receiver.</li>
                             <li>The SnapperGPS receiver captures GNSS snapshots according to your configuration.</li>
@@ -113,76 +113,6 @@
                     </div>
                     <div class="col justify-content-center align-self-center" style="text-align: center;">
                         <img src="images/Screenshot 2021-06-26 232450.avif" class="shadow" style="max-width: 300px" alt="Exemplary SnapperGPS track">
-                    </div>
-                </div>
-            </div>
-
-            <!-- <div class="row bg-light">
-                <div class="row">
-                    <div class="col">
-                        <h2>Get Yours</h2>
-                        Coming soon.
-                    </div>
-                </div>
-            </div> -->
-
-            <div class="row bg-light">
-                <div class="row">
-                    <div class="col">
-                        <h2>Resources</h2>
-                        <ul>
-                            <li>Exemplary GNSS data collected with SnapperGPS receivers in the public <a class="text-link" href="https://doi.org/10.5287/bodleian:eXrp1xydM">Oxford University Research Archive</a>.</li>
-                            <li>Our snapshot GNSS location estimation algorithms on <a class="text-link" href="https://github.com/JonasBchrt/snapshot-gnss-algorithms">GitHub</a>.</li>
-                            <li>SnapperGPS on <a class="text-link" href="https://github.com/SnapperGPS">GitHub</a>.</li>
-                            <li>@SnapperGPS on <a class="text-link" href="https://twitter.com/SnapperGPS">Twitter</a>.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row bg-light">
-                <div class="row">
-                    <div class="col">
-                        <h2>Publications</h2>
-                        <h3><i>2022</i></h3>
-                        <ul style="list-style-type:none;">
-                            <li style="margin-bottom:1em">
-                                Amanda Matthes, Jonas Beuchert, Alasdair Davies, Juan Patino-Martinez and Alex Rogers.
-                                2022.
-                                SnapperGPS: Deployment of a low-cost snapshot GNSS receiver to track loggerhead sea turtles.
-                                In <i>40th International Sea Turtle Symposium (ISTS40), March, 2022, Perth, Australia.</i>
-                                <a class="text-link" href="https://ora.ox.ac.uk/objects/uuid:c9acf083-d5e5-4265-8425-67509c5e3b9b">https://ora.ox.ac.uk/objects/uuid:c9acf083-d5e5-4265-8425-67509c5e3b9b</a>
-                            </li>
-                        </ul>
-                        <h3><i>2021</i></h3>
-                        <ul style="list-style-type:none;">
-                            <li style="margin-bottom:1em">
-                                Amanda Matthes and Jonas Beuchert.
-                                2021.
-                                Can we locate endangered 
-                                sea turtles using twelve 
-                                milliseconds of noisy satellite 
-                                signals?
-                                In <i>Inspired Research: News from the Department of Computer Science, University of Oxford.</i>
-                                Oxford, UK, Issue 19 (Winter 2021), Pages 20-21.
-                                <a class="text-link" href="https://www.cs.ox.ac.uk/innovation/inspiredresearch/InspiredResearch-winter2021.pdf">https://www.cs.ox.ac.uk/innovation/inspiredresearch/InspiredResearch-winter2021.pdf</a>.
-                            </li>
-                            <li style="margin-bottom:1em">
-                                Jonas Beuchert and Alex Rogers.
-                                2021.
-                                SnapperGPS: Algorithms for Energy-Efficient Low-Cost Location Estimation Using GNSS Signal Snapshots.
-                                In <i>SenSys ’21: ACM Conference on Embedded Networked Sensor Systems, November, 2021, Coimbra, Portugal.</i>
-                                ACM, New York, NY, USA, Pages 165-177.
-                                <a class="text-link" href="https://doi.org/10.1145/3485730.3485931">https://doi.org/10.1145/3485730.3485931</a>.
-                            </li>
-                            <li>
-                                Jonas Beuchert and Alex Rogers.
-                                2021.
-                                SnapperGPS: Collection of GNSS Signal Snapshots.
-                                University of Oxford, Oxford, UK.
-                                <a class="text-link" href="https://doi.org/10.5287/bodleian:eXrp1xydM">https://doi.org/10.5287/bodleian:eXrp1xydM</a>.
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -204,6 +134,8 @@
                                         <a class=text-link href="https://developer.mozilla.org/en-US/docs/Web/API/USB#browser_compatibility">
                                             the ones that support the WebUSB technology</a>.
                                     </li>
+                                    <li>Unplug the USB-C cable from your SnapperGPS receiver and plug it in again, this times upside down.
+                                    </li>
                                     <li>Make sure that your USB cable supports data transmission,
                                         i.e., is not a power-only cable that can only be employed
                                         to charge USB devices.
@@ -214,6 +146,10 @@
                                         then make sure that you followed the steps
                                         <a class=text-link href="#faq-1">
                                             below</a>.
+                                    </li>
+                                    <li>There is currently an issue with SnapperGPS running in recent versions of the Chrome browser on the Android operating system.
+                                        If you are on Android, use the Edge browser.
+                                        If you want to use the Chrome browser, use another operating system.
                                     </li>
                                 </ul>
                             </li>
@@ -259,6 +195,13 @@
                                         Do not replace the antenna too often.
                                         SnapperGPS' antenna connector is rated for only 30 mating cycles.
                                         Frequent antenna replacements harm signal quality.
+                                    </li>
+                                    <li>
+                                        Do not place the board on a conductive
+                                        surface. Do not place conducting
+                                        materials directly on the board without
+                                        isolation. (This includes antenna and
+                                        battery.)
                                     </li>
                                 </ul>
                             </li>
@@ -374,6 +317,83 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a data-bs-toggle="collapse" href="#faq-7" role="button" aria-expanded="false" aria-controls="collapseExample" class="text-link">
+                                    The meaning of the confidence values.
+                                </a><ul class="collapse" id="faq-7">
+                                    <li>Each location estimate comes with an uncertainty estimate when downloaded as CSV or JSON.
+                                    </li>
+                                    <li>The uncertainity estimate is a confidence radius in metres that is also shown on the map on the Download page as circle around the location estimate.
+                                    </li>
+                                    <li>A small value represents high confidence, a high value represents low confidence, and no value indicates a very uncertain fix.
+                                    </li>
+                                    <li>Originally, the confidence radius was fitted to be the one-sigma radius, i.e., there is a 68% chance that the true location is in the circle.
+                                        However, current SnapperGPS receivers with a proper antenna perform much better, i.e., the chance is higher in practice.
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        Still having issues? Start a discussion or create an issue <a class="text-link" href=https://github.com/orgs/SnapperGPS>on Github</a>.
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div class="row">
+                    <div class="col">
+                        <h2>Resources</h2>
+                        <ul>
+                            <li>Exemplary GNSS data collected with SnapperGPS receivers in the public <a class="text-link" href="https://doi.org/10.5287/bodleian:eXrp1xydM">Oxford University Research Archive</a>.</li>
+                            <li>Our snapshot GNSS location estimation algorithms on <a class="text-link" href="https://github.com/JonasBchrt/snapshot-gnss-algorithms">GitHub</a>.</li>
+                            <li>SnapperGPS on <a class="text-link" href="https://github.com/SnapperGPS">GitHub</a>.</li>
+                            <li>@SnapperGPS on <a class="text-link" href="https://twitter.com/SnapperGPS">Twitter</a>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row bg-light">
+                <div class="row">
+                    <div class="col">
+                        <h2>Publications</h2>
+                        <h3><i>2022</i></h3>
+                        <ul style="list-style-type:none;">
+                            <li style="margin-bottom:1em">
+                                Amanda Matthes, Jonas Beuchert, Alasdair Davies, Juan Patino-Martinez and Alex Rogers.
+                                2022.
+                                SnapperGPS: Deployment of a low-cost snapshot GNSS receiver to track loggerhead sea turtles.
+                                In <i>40th International Sea Turtle Symposium (ISTS40), March, 2022, Perth, Australia.</i>
+                                <a class="text-link" href="https://ora.ox.ac.uk/objects/uuid:c9acf083-d5e5-4265-8425-67509c5e3b9b">https://ora.ox.ac.uk/objects/uuid:c9acf083-d5e5-4265-8425-67509c5e3b9b</a>
+                            </li>
+                        </ul>
+                        <h3><i>2021</i></h3>
+                        <ul style="list-style-type:none;">
+                            <li style="margin-bottom:1em">
+                                Amanda Matthes and Jonas Beuchert.
+                                2021.
+                                Can we locate endangered 
+                                sea turtles using twelve 
+                                milliseconds of noisy satellite 
+                                signals?
+                                In <i>Inspired Research: News from the Department of Computer Science, University of Oxford.</i>
+                                Oxford, UK, Issue 19 (Winter 2021), Pages 20-21.
+                                <a class="text-link" href="https://www.cs.ox.ac.uk/innovation/inspiredresearch/InspiredResearch-winter2021.pdf">https://www.cs.ox.ac.uk/innovation/inspiredresearch/InspiredResearch-winter2021.pdf</a>.
+                            </li>
+                            <li style="margin-bottom:1em">
+                                Jonas Beuchert and Alex Rogers.
+                                2021.
+                                SnapperGPS: Algorithms for Energy-Efficient Low-Cost Location Estimation Using GNSS Signal Snapshots.
+                                In <i>SenSys ’21: ACM Conference on Embedded Networked Sensor Systems, November, 2021, Coimbra, Portugal.</i>
+                                ACM, New York, NY, USA, Pages 165-177.
+                                <a class="text-link" href="https://doi.org/10.1145/3485730.3485931">https://doi.org/10.1145/3485730.3485931</a>.
+                            </li>
+                            <li>
+                                Jonas Beuchert and Alex Rogers.
+                                2021.
+                                SnapperGPS: Collection of GNSS Signal Snapshots.
+                                University of Oxford, Oxford, UK.
+                                <a class="text-link" href="https://doi.org/10.5287/bodleian:eXrp1xydM">https://doi.org/10.5287/bodleian:eXrp1xydM</a>.
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -392,10 +412,19 @@
                             Alex Rogers</a>
                         in the Department of Computer Science
                         of the University of Oxford.
+                        <br>
+                        Jonas Beuchert and Amanda Matthes are
+                        funded by the EPSRC Centre for Doctoral Training in
+                        Autonomous Intelligent Machines and Systems
+                        (DFT00350-DF03.01, DFT00350-DF03.05) and develop
+                        SnapperGPS as part of their doctoral studies.
+                        The implementation of SnapperGPS 
+                        was co-funded by an EPSRC IAA Technology Fund
+                        (D4D00010-BL14).
                     </div>
                 </div>
             </div>
-
+            
             <div class="row bg-white">
                 <div class="col">
                     <a class="text-link" href="/privacy">Privacy policy</a>
