@@ -21,12 +21,14 @@
         // If not HTTPS, switch to it
         window.location.replace(`https:${window.location.href.substring(window.location.protocol.length)}`);
 
-    }
+    } else {
 
-    // Check if WebUSB is still not available
-    if (!navigator.usb) {
+        // Check if WebUSB is still not available
+        if (!navigator.usb) {
 
-        document.getElementById('warning-display').style.display = '';
+            document.getElementById('warning-display').style.display = '';
+
+        }
 
     }
 </script>
