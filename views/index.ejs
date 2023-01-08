@@ -68,7 +68,7 @@
                         <h2>The SnapperGPS Receiver</h2>
                         The SnapperGPS receiver is a small, low-cost, and low-power GNSS receiver for non-real-time wildlife tracking.
                         It employs the snapshot GNSS technology,
-                        which offloads the computational expensive data processing
+                        which offloads the computationally expensive data processing
                         to the cloud, and:
                     </div>
                 </div>
@@ -203,6 +203,18 @@
                                         isolation. (This includes antenna and
                                         battery.)
                                     </li>
+                                    <li>
+                                        Make sure that the battery was
+                                        sufficiently charged during the
+                                        deployment. Ideally, a long deployment
+                                        should start with a battery voltage of
+                                        at least 4.1 V. You can confirm this by
+                                        downloading your data as CSV or JSON and
+                                        inspecting the <i>battery</i> field of
+                                        the first record. A low battery voltage
+                                        can be caused by a short, see previous
+                                        note.
+                                    </li>
                                 </ul>
                             </li>
                             <li>
@@ -242,6 +254,16 @@
                                     <li>Be sure that the start and end time on
                                         the configuration page as well as on the upload page
                                         were correctly set.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a data-bs-toggle="collapse" href="#faq-8" role="button" aria-expanded="false" aria-controls="collapseExample" class="text-link">
+                                    There are many outliers in my tracks.
+                                </a><ul class="collapse" id="faq-8">
+                                    <li>Re-upload your data and set the <i>Max. velocity</i>
+                                        to a smaller value. You can even try something like
+                                        0.01 m/s.
                                     </li>
                                 </ul>
                             </li>
