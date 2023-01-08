@@ -126,6 +126,14 @@ body {
   background-color: var(--aims-pink);
 }
 
+.bg-warning {
+    background-color: var(--aims-pink) !important;
+}
+
+.bg-danger {
+    background-color: var(--aims-purple) !important;
+}
+
 /* On very small screens, make buttons full width */
 @media(max-width: 575.98px) {
     button.full-width {
