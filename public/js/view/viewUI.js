@@ -43,9 +43,17 @@ const endTimeInput = document.getElementById('end-time-input');
 const processingWarningDisplay = document.getElementById('processing-warning-display');
 const processingWarningText = document.getElementById('processing-warning-text');
 
+// Low battery warning
+const batteryWarningDisplay = document.getElementById('battery-warning-display');
+const batteryWarningText = document.getElementById('battery-warning-text');
+
+// Threshold to show low battery warning [V]
+const batteryWarningThreshold = 4.0;
+
 // Smoothing
 const smoothInput = document.getElementById('smooth-input');
 const smoothSpinner = document.getElementById('smooth-spinner');
+// const smoothButton = document.getElementById('smooth-button');
 const smoothSpan = document.getElementById('smooth-span');
 
 let startDateTime;
@@ -278,6 +286,18 @@ function populateMap (positions) {
                  'and the ' +
                  "<a class='text-link' href='https://github.com/SnapperGPS/snappergps-pcb/discussions'>the discussions on GitHub</a> " +
                  'to improve your results.';
+        }
+
+        // Display battery warning
+        if (deviceID != 'AAAABBBBCCCCDDDD' && positions[0].battery < batteryWarningThreshold) {
+            batteryWarningDisplay.style.display = '';
+            batteryWarningText.innerHTML = 'Your deployment started with a battery voltage of ' +
+            positions[0].battery + ' V, which is low. ' +
+                'For best results, make sure that the battery was sufficiently charged before the deployment. ' +
+                'Ideally, a long deployment should start with a battery voltage of at least 4.1 V. ' +
+                'A low battery voltage can also be caused by a short. ' +
+                'Do not place the board on a conductive surface and do not place conducting materials directly on the board without isolation. ' +
+                '(This includes antenna and battery.)';
         }
 
         if (pointList.length > 0) {
@@ -867,15 +887,17 @@ getInformation(() => {
 
         if (!disableButtons) {
 
-            // Initialize date-time range picker
-
+            // Get start and end date from first and last processed snapshot
+    
             startDateTime = new Date(positions[0].timestamp * 1000); // Unix time [s] to UTC
             endDateTime = new Date(Math.ceil(positions[processedPositionCount - 1].timestamp / 60) * 60 * 1000); // Unix time [s] to UTC, round-up
 
-            startDateInput.value = startDateTime.toISOString().substr(0, 10);
-            endDateInput.value = endDateTime.toISOString().substr(0, 10);
-            startTimeInput.value = startDateTime.toISOString().substr(11, 5);
-            endTimeInput.value = endDateTime.toISOString().substr(11, 5);
+            // Initialize date-time range picker
+
+            startDateInput.value = startDateTime.toISOString().substring(0, 10);
+            endDateInput.value = endDateTime.toISOString().substring(0, 10);
+            startTimeInput.value = startDateTime.toISOString().substring(11, 16);
+            endTimeInput.value = endDateTime.toISOString().substring(11, 16);
 
             startDateInput.disabled = false;
             endDateInput.disabled = false;
@@ -891,10 +913,34 @@ getInformation(() => {
         // Disable spinner when not loading
         downloadSpinner.style.display = 'none';
 
-        // Display warning if no snpahsots processed
+        // Display warning if no snapshots processed
         if (processedPositionCount === null || processedPositionCount === 0) {
             processingWarningDisplay.style.display = '';
-            processingWarningText.innerHTML = 'SnappperGPS has not processed your snapshots yet.';
+            // Check if all snapshots where not in the selected date range
+            getFirstLastSnapshotTimestamps(uploadID, (timestampsRes) => {
+                const snapshotTimestamps = JSON.parse(timestampsRes);
+                const snapshotStartDt = new Date(snapshotTimestamps.startDatetime);
+                const snapshotEndDt = new Date(snapshotTimestamps.endDatetime);
+                const selectedStartDt = new Date(referencePoints[0].dt);
+                const selectedEndDt = new Date(referencePoints[1].dt);
+                if (snapshotStartDt <= selectedEndDt && snapshotEndDt >= selectedStartDt) {
+                    // Selected range is good -> snapshots just have not been processed yet
+                    processingWarningText.innerHTML = 'SnappperGPS has not processed your snapshots yet.';
+                } else {
+                    // Selected range is bad
+                    processingWarningText.innerHTML = 'None of your uploaded snapshots falls into your selected time range. ' +
+                    'You selected ' + 
+                    (selectedStartDt).toString().replace('GMT', 'UTC') +
+                    ' as start time and ' +
+                    (selectedEndDt).toString().replace('GMT', 'UTC') +
+                    ' as end time, but your snapshots were captured between ' + 
+                    (snapshotStartDt).toString().replace('GMT', 'UTC') +
+                    ' and ' +
+                    (snapshotEndDt).toString().replace('GMT', 'UTC') +
+                    '.';
+                }
+
+            })
         }
 
         // Remember raw positions from database

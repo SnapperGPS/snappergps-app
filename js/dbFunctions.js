@@ -196,14 +196,38 @@ exports.getUploadInformation = (dbClient, uploadID, callback) => {
 };
 
 /**
- * Get the snapshot_id of the snapshots associated with a given upload
+ * Get the number of snapshots associated with a given upload
  * @param {object} dbClient Postgres client
  * @param {string} uploadID Unique upload ID
  * @param {function} callback Function called on completion
  */
-exports.getSnapshotInformation = (dbClient, uploadID, callback) => {
+exports.getSnapshotCount = (dbClient, uploadID, callback) => {
 
-    dbClient.query('SELECT snapshot_id FROM snapshots WHERE upload_id = $1', [uploadID], callback);
+    dbClient.query('SELECT COUNT(snapshot_id) FROM snapshots WHERE upload_id = $1', [uploadID], callback);
+
+};
+
+/**
+ * Get timestamp of first snapshot associated with a given upload
+ * @param {object} dbClient Postgres client
+ * @param {string} uploadID Unique upload ID
+ * @param {function} callback Function called on completion
+ */
+exports.getFirstSnapshotTimestamp = (dbClient, uploadID, callback) => {
+
+    dbClient.query('SELECT datetime FROM snapshots WHERE upload_id = $1 ORDER BY datetime ASC LIMIT 1', [uploadID], callback);
+
+};
+
+/**
+ * Get timestamp of last snapshot associated with a given upload
+ * @param {object} dbClient Postgres client
+ * @param {string} uploadID Unique upload ID
+ * @param {function} callback Function called on completion
+ */
+exports.getLastSnapshotTimestamp = (dbClient, uploadID, callback) => {
+
+    dbClient.query('SELECT datetime FROM snapshots WHERE upload_id = $1 ORDER BY datetime DESC LIMIT 1', [uploadID], callback);
 
 };
 
