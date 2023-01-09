@@ -53,7 +53,6 @@ const batteryWarningThreshold = 4.0;
 // Smoothing
 const smoothInput = document.getElementById('smooth-input');
 const smoothSpinner = document.getElementById('smooth-spinner');
-// const smoothButton = document.getElementById('smooth-button');
 const smoothSpan = document.getElementById('smooth-span');
 
 let startDateTime;
@@ -722,7 +721,7 @@ smoothInput.addEventListener('change', () => {
             const Pn_post = Array(positions.length).fill(NaN);
             const Pe_post = Array(positions.length).fill(NaN);
 
-            // Initialise with 1st observation
+            // Initialize with 1st observation
             const init_position = raw_positions[firstPlausiblePositionIdx];
             const init_latlon = new LatLon(init_position.estimated_lat, init_position.estimated_lng, 0.0);
             const init_ned = reference_latlon.deltaTo(init_latlon);
@@ -734,12 +733,11 @@ smoothInput.addEventListener('change', () => {
             // Forward pass, same as regular Kalman filter
             for (let k = 1; k < positions.length; ++k) {
 
-                // console.log('Forward pass ' + (k+1) + "/" + positions.length);
+                // Forward pass k+1
 
                 const position = raw_positions[k];
                 const prev_position = raw_positions[k-1];
                 const dT = position.timestamp - prev_position.timestamp;
-                // console.log('dT = ' + dT + ' s');
 
                 // Predicted (a priori) state estimate
                 xn_prio[k] = F * xn_post[k-1];  // KF
@@ -796,7 +794,7 @@ smoothInput.addEventListener('change', () => {
             const Pn_smooth = Array(positions.length).fill(NaN);
             const Pe_smooth = Array(positions.length).fill(NaN);
             
-            // Initialise with last filtered estimate
+            // Initialize with last filtered estimate
             xn_smooth[positions.length-1] = xn_post[positions.length-1];
             xe_smooth[positions.length-1] = xe_post[positions.length-1];
             Pn_smooth[positions.length-1] = Pn_post[positions.length-1];
@@ -804,7 +802,7 @@ smoothInput.addEventListener('change', () => {
             
             // Backward pass
             for (let k = positions.length - 2; k >= 0; --k) {
-                // console.log('Backward pass ' + (positions.length - k) + "/" + positions.length);
+                // Backward pass positions.length-k
                 const Cn = Pn_post[k] * F * (1.0 / Pn_prio[k+1]);
                 const Ce = Pe_post[k] * F * (1.0 / Pe_prio[k+1]);
                 xn_smooth[k] = xn_post[k] + Cn * (xn_smooth[k+1] - xn_prio[k+1]);
