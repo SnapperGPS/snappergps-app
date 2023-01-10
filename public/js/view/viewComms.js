@@ -32,3 +32,17 @@ function getPositions (uploadID, callback) {
     sendPOSTRequest('getPositions', formData, callback);
 
 }
+
+/**
+ * Request first and last snapshot timestamp
+ * @param {string} uploadID Unique upload ID
+ * @param {function} callback Function called on completion
+ */
+ function getFirstLastSnapshotTimestamps (uploadID, callback) {
+
+    const formData = new FormData();
+    formData.append('uploadID', uploadID);
+
+    sendPOSTRequest('getFirstLastSnapshotTimestamps', formData, callback);
+
+ }

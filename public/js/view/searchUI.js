@@ -6,7 +6,7 @@
 const idInput = document.getElementById('id-input');
 const searchButton = document.getElementById('search-button');
 
-searchButton.addEventListener('click', () => {
+function searchId () {
 
     let id = idInput.value;
 
@@ -24,4 +24,12 @@ searchButton.addEventListener('click', () => {
 
     window.location.href = '/view?uploadid=' + id;
 
+}
+
+searchButton.addEventListener('click', searchId);
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        searchId();
+    }
 });

@@ -355,7 +355,7 @@ module.exports = function (app, dbClient) {
 
                 // Pull information from snapshots table
 
-                dbFunctions.getSnapshotInformation(dbClient, uploadID, async (err, snapshotRes) => {
+                dbFunctions.getSnapshotCount(dbClient, uploadID, async (err, snapshotRes) => {
 
                     if (err) {
 
@@ -365,7 +365,7 @@ module.exports = function (app, dbClient) {
 
                     }
 
-                    const snapshotCount = snapshotRes.rows.length;
+                    const snapshotCount = snapshotRes.rows[0].count;
 
                     // Bundle requested information into JSON object and return it
 
@@ -379,6 +379,70 @@ module.exports = function (app, dbClient) {
                     res.json(information);
 
                 });
+
+            });
+
+        });
+
+    });
+
+    /**
+     * Return timestamps of first and last snapshot
+     */
+    app.post('/getFirstLastSnapshotTimestamps', (req, res) => {
+
+        if (!req.body.uploadID) {
+
+            res.status(400).send('Unreadable upload ID.');
+            return;
+
+        }
+
+        const uploadID = req.body.uploadID;
+
+        // Get timestmap of first snapshot
+
+        dbFunctions.getFirstSnapshotTimestamp(dbClient, uploadID, (err, startRes) => {
+
+            if (err) {
+
+                console.log(err);
+                res.status(400).send(err);
+                return;
+
+            }
+
+            if (startRes.rows.length === 0) {
+
+                res.status(400).send('No uploads match that ID.');
+                return;
+
+            }
+
+            const startDt = startRes.rows[0].datetime;
+
+            // Get timestamp of last snapshot
+
+            dbFunctions.getLastSnapshotTimestamp(dbClient, uploadID, (err, endRes) => {
+
+                if (err) {
+
+                    console.log(err);
+                    res.status(400).send(err);
+                    return;
+
+                }
+
+                const endDt = endRes.rows[0].datetime;
+
+                // Bundle requested information into JSON object and return it
+
+                const information = {
+                    startDatetime: startDt,
+                    endDatetime: endDt
+                };
+
+                res.json(information);
 
             });
 

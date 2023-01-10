@@ -33,8 +33,9 @@ const firmwareInfo = document.getElementById('firmware-info');
 const firmwareButton = document.getElementById('firmware-button');
 const firmwareSpinner = document.getElementById('firmware-spinner');
 
-// Low battery warning
+// Low battery warnings
 const batteryWarningDisplay = document.getElementById('battery-warning-display');
+const chargeWarningDisplay = document.getElementById('charge-warning-display');
 
 // Info what receiver will do next
 const statusInfo = document.getElementById('status-info');
@@ -44,8 +45,9 @@ const CURRENT_FIRMWARE_DESCRIPTION = 'SnapperGPS-Basic'; // TODO
 
 const CURRENT_FIRMWARE_VERSION = '0.0.7'; // TODO
 
-// Threshold to show low battery warning
+// Thresholds to show low battery warnings
 const batteryWarningThreshold = 2.0;
+const chargeWarningThreshold = 4.05;
 
 var configuring = false;
 var restarting = false;
@@ -195,6 +197,8 @@ function checkForDevice (repeat = true) {
     setTimeout(changeUIBasedOnFirmware, 50);
 
     batteryWarningDisplay.style.display = (batteryVoltage !== null && batteryVoltage < batteryWarningThreshold) ? '' : 'none';
+
+    chargeWarningDisplay.style.display = (batteryVoltage !== null && batteryVoltage >= batteryWarningThreshold && batteryVoltage < chargeWarningThreshold) ? '' : 'none';
 
     if (repeat) {
 
@@ -561,6 +565,8 @@ pairButton.addEventListener('click', () => {
     });
 
 });
+
+intervalInput.addEventListener('click', () => {intervalInput.select();})
 
 // Set the function which will be called when a WebUSB device is disconnected
 
