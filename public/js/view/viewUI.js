@@ -4,7 +4,7 @@
  *****************************************************************************/
 
 // Geodesy for smoothing
-import LatLon, { Nvector, Cartesian, Ned, Dms } from 'https://cdn.jsdelivr.net/npm/geodesy@2/latlon-nvector-ellipsoidal.js';
+import LatLon, { Ned } from 'https://cdn.jsdelivr.net/npm/geodesy@2/latlon-nvector-ellipsoidal.js';
 
 /* global loadUploadData, getPositions, L */
 
