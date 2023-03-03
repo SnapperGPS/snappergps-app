@@ -47,7 +47,7 @@ const zebraIcon = L.icon({
     shadowSize: [41, 41]
 });
 
-const markers = [L.marker([null, null], {interactive: false, icon: zebraIcon}), L.marker()];
+const markers = [L.marker([null, null], { interactive: false, icon: zebraIcon }), L.marker()];
 
 // Maximum distance between 2 plausible positions as defined in back-end.
 const maxDistancePlausible = 10e3;
@@ -108,7 +108,7 @@ const AM_USB_MSG_TYPE_GET_SNAPSHOT_PAGE = 0x84; // previously 0x06
  * @param {string} id ID of map tile layer used by Leaflet
  * @returns TileLayer object
  */
-function getTileLayer (id) {
+function getTileLayer(id) {
 
     // Retrieve specific base map layer from mapbox API.
     return L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -129,7 +129,7 @@ function getTileLayer (id) {
  * @param {string} mapID DOM ID which map will be place in
  * @returns Leaflet map object
  */
-function createMap (mapID) {
+function createMap(mapID) {
 
     const mapLayers = {
         Streets: getTileLayer('mapbox/streets-v11'),
@@ -147,13 +147,13 @@ function createMap (mapID) {
 
     // L.control.zoom({position: 'topright'}).addTo(map);
 
-    L.control.scale({position: 'bottomleft'}).addTo(map);
+    L.control.scale({ position: 'bottomleft' }).addTo(map);
 
     L.control.layers(mapLayers).addTo(map);
     map.setView([51.753449349360785, -1.2540079829543849], 11);
 
     // Add search box
-    var searchControl = new L.esri.Controls.Geosearch({allowMultipleResults: false, position: 'topleft'}).addTo(map);
+    var searchControl = new L.esri.Controls.Geosearch({ allowMultipleResults: false, position: 'topleft' }).addTo(map);
 
     // Use best result as start location of track
     searchControl.on('results', function (data) {
@@ -182,7 +182,7 @@ const canvases = [document.getElementById('start-map-canvas'), document.getEleme
  * @param {string} radioName Name assigned to a group of radio buttons
  * @returns Index of the selected radio
  */
-function getSelectedRadioValue (radioName) {
+function getSelectedRadioValue(radioName) {
 
     return parseInt(document.querySelector('input[name="' + radioName + '"]:checked').value);
 
@@ -193,7 +193,7 @@ function getSelectedRadioValue (radioName) {
  * @param {float} lat Latitude
  * @param {float} lng Longitude
  */
-function areValidCoords (lat, lng) {
+function areValidCoords(lat, lng) {
 
     return !isNaN(lat) && !isNaN(lng) && lat > -90.0 && lat < 90.0 && lng > -180.0 && lng < 180.0;
 
@@ -204,7 +204,7 @@ function areValidCoords (lat, lng) {
  * @param {int} index Map index
  * @param {object} latlng JSON object containing co-ordinates
  */
-function updateMap (index, latlng) {
+function updateMap(index, latlng) {
 
     markers[index].setLatLng(latlng);
     markers[index].addTo(maps[index]);
@@ -237,7 +237,7 @@ function updateMap (index, latlng) {
  * @param {float} lat Latitude
  * @param {float} lng Longitude
  */
-function moveMapView (index, lat, lng) {
+function moveMapView(index, lat, lng) {
 
     maps[index].flyTo([lat, lng], 13);
 
@@ -247,7 +247,7 @@ function moveMapView (index, lat, lng) {
  * Grey out map and block interactions
  * @param {integer} index Map index
  */
-function disableMap (index) {
+function disableMap(index) {
 
     const map = maps[index];
 
@@ -268,7 +268,7 @@ function disableMap (index) {
  * Remove grey overlay and re-enable interactions
  * @param {integer} index Map index
  */
-function enableMap (index) {
+function enableMap(index) {
 
     const map = maps[index];
 
@@ -289,7 +289,7 @@ function enableMap (index) {
  * Re-enable UI elements of given side of the UI
  * @param {integer} index UI index
  */
-function enableStartEndUI (index) {
+function enableStartEndUI(index) {
 
     timeInputs[index].disabled = false;
     dateInputs[index].disabled = false;
@@ -301,7 +301,7 @@ function enableStartEndUI (index) {
  * Disable UI elements of given side of the UI
  * @param {integer} index UI index
  */
-function disableStartEndUI (index) {
+function disableStartEndUI(index) {
 
     timeInputs[index].disabled = true;
     dateInputs[index].disabled = true;
@@ -314,13 +314,13 @@ function disableStartEndUI (index) {
  * @param {integer} index Map index
  * @param {object} latlng JSON object containing location where the map was clicked
  */
-function onMapClick (index, latlng) {
+function onMapClick(index, latlng) {
 
     updateMap(index, latlng);
 
 }
 
-function displayError (errorDescription) {
+function displayError(errorDescription) {
 
     console.error(errorDescription);
 
@@ -334,7 +334,7 @@ function displayError (errorDescription) {
 /**
  * Enable all UI elements
  */
-function enableUI () {
+function enableUI() {
 
     if (!uploading) {
 
@@ -397,7 +397,7 @@ function enableUI () {
 /**
  * Disable all UI elements while transferring data from device.
  */
-function disableDeviceUI () {
+function disableDeviceUI() {
 
     // Disable all device-related buttons
     pairButton.disabled = true;
@@ -410,7 +410,7 @@ function disableDeviceUI () {
 /**
  * Disable all UI elements while uploading data to server.
  */
-function disableUploadUI () {
+function disableUploadUI() {
 
     // Disable all upload-related buttons
     uploadSelectedButton.disabled = true;
@@ -470,7 +470,7 @@ for (let inputIndex = 0; inputIndex < dateInputs.length; ++inputIndex) {
  * Update device file button and UI to display a spinner and "Uploading" text when snapshots are being uploaded
  * @param {bool} isUploading Is the app currently uploading snapshots
  */
-function setDeviceUploading (isUploading) {
+function setDeviceUploading(isUploading) {
 
     uploadDeviceSpinner.style.display = isUploading ? '' : 'none';
 
@@ -495,7 +495,7 @@ function setDeviceUploading (isUploading) {
  * Update transfer button and UI to display a spinner and "Transferring" text when snapshots are being transferred
  * @param {bool} isTransferring Is the app currently transferring snapshots
  */
-function setTransferring (isTransferring) {
+function setTransferring(isTransferring) {
 
     transferSpinner.style.display = isTransferring ? '' : 'none';
 
@@ -518,7 +518,7 @@ function setTransferring (isTransferring) {
  * Update selected file button and UI to display a spinner and "Uploading" text when snapshots are being uploaded
  * @param {bool} isUploading Is the app currently uploading snapshots
  */
-function setSelectedUploading (isUploading) {
+function setSelectedUploading(isUploading) {
 
     uploadSelectedSpinner.style.display = isUploading ? '' : 'none';
 
@@ -544,9 +544,9 @@ function setSelectedUploading (isUploading) {
  * @param {object} dt datetime
  * @returns JSON object containing reference point information
  */
-function createReferencePointJSON (latInput, lngInput, dt) {
+function createReferencePointJSON(latInput, lngInput, dt) {
 
-    return {lat: parseFloat(latInput.value), lng: parseFloat(lngInput.value), dt: dt};
+    return { lat: parseFloat(latInput.value), lng: parseFloat(lngInput.value), dt: dt };
 
 }
 
@@ -560,7 +560,7 @@ function createReferencePointJSON (latInput, lngInput, dt) {
  * @param {ArrayBuffer} data Byte array returned from receiver after requesting meta data.
  * @return {Promise}
  */
-async function getSnapshotDevice (uploadID, meta, data) {
+async function getSnapshotDevice(uploadID, meta, data) {
 
     return new Promise((resolve) => {
 
@@ -581,7 +581,7 @@ async function getSnapshotDevice (uploadID, meta, data) {
 
         console.log('Uploading file');
 
-        const snapshotBlob = new Blob([snapshotBuffer], {type: 'application/octet-stream'});
+        const snapshotBlob = new Blob([snapshotBuffer], { type: 'application/octet-stream' });
 
         resolve(uploadSnapshot(uploadID, snapshotBlob, meta.timestamp, meta.battery, 1, 1, meta.temperature));
 
@@ -607,7 +607,7 @@ var isQueueFull = false;
  * that only max 4 tasks are running in parallel. Terminate once all tasks in
  * queue are completed.
  */
-async function processDevice2ServerQueue (maxNumOfWorkers = 4) {
+async function processDevice2ServerQueue(maxNumOfWorkers = 4) {
 
     // No worker is active when queue processor is started.
     var numOfWorkers = 0;
@@ -673,7 +673,7 @@ var earliestDate, latestDate;
 /**
  * React to upload button being clicked by attempting to upload data from connected device
  */
-function onDeviceUploadButtonClick () {
+function onDeviceUploadButtonClick() {
 
     snapshotCountLabelUpload.innerHTML = '0 snapshots uploaded.';
 
@@ -868,7 +868,7 @@ function onDeviceUploadButtonClick () {
  * the upload from 'uploading' to 'waiting'.
   * @param {string}      uploadID Unique ID returned by startUpload().
  */
-async function postSnapshotUploadDevice (uploadID) {
+async function postSnapshotUploadDevice(uploadID) {
 
     // Display progress on UI
     snapshotCountLabelUpload.innerHTML = snapshotCountLabelUpload.innerHTML + ' Completing upload.';
@@ -921,21 +921,21 @@ async function postSnapshotUploadDevice (uploadID) {
     let earliestProcessingDateString;
     switch (getSelectedRadioValue('priority-radio')) {
 
-    case 0:
-        // immidiate
-        earliestProcessingDateString = '1970-01-01 01:01:01';
-        break;
+        case 0:
+            // immidiate
+            earliestProcessingDateString = '1970-01-01 01:01:01';
+            break;
 
-    case 1:
-        // rapid
-        earliestProcessingDateString = dateToDatabaseString(latestDate, 0);
-        break;
+        case 1:
+            // rapid
+            earliestProcessingDateString = dateToDatabaseString(latestDate, 0);
+            break;
 
-    case 2:
-        // delayed
-        latestDate.setDate(latestDate.getDate() + 1);
-        earliestProcessingDateString = dateToDatabaseString(latestDate, 12);
-        break;
+        case 2:
+            // delayed
+            latestDate.setDate(latestDate.getDate() + 1);
+            earliestProcessingDateString = dateToDatabaseString(latestDate, 12);
+            break;
 
     }
 
@@ -968,7 +968,7 @@ async function postSnapshotUploadDevice (uploadID) {
  * @param {string}      uploadID Unique ID returned by startUpload().
  * @param {object}      snapshot Element of snapshot list.
  */
-async function getSnapshotJSON (uploadID, snapshot) {
+async function getSnapshotJSON(uploadID, snapshot) {
 
     return new Promise((resolve) => {
 
@@ -987,7 +987,7 @@ async function getSnapshotJSON (uploadID, snapshot) {
 
         }
         const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], {type: 'application/octet-stream'});
+        const blob = new Blob([byteArray], { type: 'application/octet-stream' });
         // Upload everything for this snapshot
         resolve(uploadSnapshot(uploadID, blob, dt, battery, 1, 1, temperature));
 
@@ -1000,7 +1000,7 @@ async function getSnapshotJSON (uploadID, snapshot) {
  * @param {string}      uploadID Unique ID returned by startUpload().
  * @param {Array}       snapshots Array of snapshots from JSON file.
  */
-function processFile2ServerQueue (uploadID, snapshots, maxNumOfWorkers = 4) {
+function processFile2ServerQueue(uploadID, snapshots, maxNumOfWorkers = 4) {
 
     // Number of busy workers
     var numOfWorkers = 0;
@@ -1061,7 +1061,7 @@ function processFile2ServerQueue (uploadID, snapshots, maxNumOfWorkers = 4) {
 /**
  * React to upload button being clicked by attempting to upload provided data
  */
-function onSelectedUploadButtonClick () {
+function onSelectedUploadButtonClick() {
 
     snapshotCountLabelUpload.innerHTML = '0 snapshots uploaded.';
 
@@ -1130,9 +1130,9 @@ function onSelectedUploadButtonClick () {
 
                     // Check for valid JSON structure
                     if (!snapshots[i].hasOwnProperty('timestamp') ||
-                            !snapshots[i].hasOwnProperty('temperature') ||
-                            !snapshots[i].hasOwnProperty('batteryVoltage') ||
-                            !snapshots[i].hasOwnProperty('data')) {
+                        !snapshots[i].hasOwnProperty('temperature') ||
+                        !snapshots[i].hasOwnProperty('batteryVoltage') ||
+                        !snapshots[i].hasOwnProperty('data')) {
 
                         console.error('Upload failed');
                         errorCard.style.display = '';
@@ -1167,7 +1167,7 @@ function onSelectedUploadButtonClick () {
                         earliestDate = dt;
 
                     }
-                    
+
                 }
 
                 await processFile2ServerQueue(uploadID, snapshots);
@@ -1178,7 +1178,7 @@ function onSelectedUploadButtonClick () {
                 // Create an array of reference points in this way so it's easy to expand to more than just two later
 
                 const referencePoints = [];
-                
+
                 if (timeInputs[0].value === '' || dateInputs[0].value === '') {
                     console.log('Use timestamp of first snapshot for start point.');
                     var dt0 = earliestDate;
@@ -1233,21 +1233,21 @@ function onSelectedUploadButtonClick () {
                 let earliestProcessingDateString;
                 switch (getSelectedRadioValue('priority-radio')) {
 
-                case 0:
-                    // immidiate
-                    earliestProcessingDateString = '1970-01-01 01:01:01';
-                    break;
+                    case 0:
+                        // immidiate
+                        earliestProcessingDateString = '1970-01-01 01:01:01';
+                        break;
 
-                case 1:
-                    // rapid
-                    earliestProcessingDateString = dateToDatabaseString(latestDate, 0);
-                    break;
+                    case 1:
+                        // rapid
+                        earliestProcessingDateString = dateToDatabaseString(latestDate, 0);
+                        break;
 
-                case 2:
-                    // delayed
-                    latestDate.setDate(latestDate.getDate() + 1);
-                    earliestProcessingDateString = dateToDatabaseString(latestDate, 12);
-                    break;
+                    case 2:
+                        // delayed
+                        latestDate.setDate(latestDate.getDate() + 1);
+                        earliestProcessingDateString = dateToDatabaseString(latestDate, 12);
+                        break;
 
                 }
 
@@ -1265,8 +1265,8 @@ function onSelectedUploadButtonClick () {
 
                     console.log('Upload success');
                     window.location.href = '/success?uploadid=' + response +
-                                           '&email=' + emailInput.value +
-                                           '&push=' + notificationCheckbox.checked;
+                        '&email=' + emailInput.value +
+                        '&push=' + notificationCheckbox.checked;
 
                 });
 
@@ -1389,7 +1389,7 @@ function onSelectedUploadButtonClick () {
         // Create an array of reference points in this way so it's easy to expand to more than just two later
 
         const referencePoints = [];
-        
+
         if (timeInputs[0].value === '' || dateInputs[0].value === '') {
             console.log('Use timestamp of first snapshot for start point.');
             var dt0 = earliestDate;
@@ -1444,21 +1444,21 @@ function onSelectedUploadButtonClick () {
         let earliestProcessingDateString;
         switch (getSelectedRadioValue('priority-radio')) {
 
-        case 0:
-            // immidiate
-            earliestProcessingDateString = '1970-01-01 01:01:01';
-            break;
+            case 0:
+                // immidiate
+                earliestProcessingDateString = '1970-01-01 01:01:01';
+                break;
 
-        case 1:
-            // rapid
-            earliestProcessingDateString = dateToDatabaseString(latestDate, 0);
-            break;
+            case 1:
+                // rapid
+                earliestProcessingDateString = dateToDatabaseString(latestDate, 0);
+                break;
 
-        case 2:
-            // delayed
-            latestDate.setDate(latestDate.getDate() + 1);
-            earliestProcessingDateString = dateToDatabaseString(latestDate, 12);
-            break;
+            case 2:
+                // delayed
+                latestDate.setDate(latestDate.getDate() + 1);
+                earliestProcessingDateString = dateToDatabaseString(latestDate, 12);
+                break;
 
         }
 
@@ -1485,7 +1485,7 @@ function onSelectedUploadButtonClick () {
 
 }
 
-function dateToDatabaseString (latestDate, hours) {
+function dateToDatabaseString(latestDate, hours) {
 
     const year = latestDate.getFullYear();
     const month = latestDate.getMonth() + 1;
@@ -1507,7 +1507,7 @@ function dateToDatabaseString (latestDate, hours) {
  * Prepare a grey overlay canvas used to make it obvious a map is not usable
  * @param {object} canvas Grey overlay canvas
  */
-function initialiseCanvas (canvas) {
+function initialiseCanvas(canvas) {
 
     const ctx = canvas.getContext('2d');
     ctx.globalAlpha = 0.5;
@@ -1520,7 +1520,7 @@ function initialiseCanvas (canvas) {
  * Prepare map interactions
  * @param {integer} index Map index
  */
-function initialiseMapUI (index) {
+function initialiseMapUI(index) {
 
     // Add listener which adds marker to map
 
@@ -1529,7 +1529,7 @@ function initialiseMapUI (index) {
         onMapClick(index, event.latlng);
 
     });
-    
+
     // Add functionality for updating map from textboxes
 
     latInputs[index].addEventListener('change', () => {
@@ -1539,7 +1539,7 @@ function initialiseMapUI (index) {
 
         if (areValidCoords(inputLat, inputLng)) {
 
-            updateMap(index, {lat: inputLat, lng: inputLng});
+            updateMap(index, { lat: inputLat, lng: inputLng });
             moveMapView(index, inputLat, inputLng);
 
         }
@@ -1553,7 +1553,7 @@ function initialiseMapUI (index) {
 
         if (areValidCoords(inputLat, inputLng)) {
 
-            updateMap(index, {lat: inputLat, lng: inputLng});
+            updateMap(index, { lat: inputLat, lng: inputLng });
             moveMapView(index, inputLat, inputLng);
 
         }
@@ -1569,7 +1569,7 @@ function initialiseMapUI (index) {
 /**
  * Looping function which checks to see if WebUSB device has been connected
  */
-function checkForDevice (repeat = true) {
+function checkForDevice(repeat = true) {
 
     if (isDeviceAvailable()) {
 
@@ -1621,7 +1621,7 @@ function checkForDevice (repeat = true) {
 
 }
 
-function reportCoordinateError (index) {
+function reportCoordinateError(index) {
 
     latInputs[index].value = '';
     lngInputs[index].value = '';
@@ -1638,7 +1638,7 @@ function reportCoordinateError (index) {
 
 }
 
-function checkInputs () {
+function checkInputs() {
 
     let invalidCoords = false;
 
@@ -1671,7 +1671,7 @@ function checkInputs () {
 
     }
 
-    if (dateInputs[0] !== '' && dateInputs[1] !== '' && timeInputs[0] !== '' && timeInputs[1] !== '' ) {
+    if (dateInputs[0] !== '' && dateInputs[1] !== '' && timeInputs[0] !== '' && timeInputs[1] !== '') {
 
         let startDt = new Date(dateInputs[0].value + ' ' + timeInputs[0].value);
         // Fix WebKit problem (WebKit does not recognise YYYY-MM-DD, but YYYY/MM/DD)
@@ -1731,7 +1731,7 @@ function checkInputs () {
    *    @return {Number}    meta.temperature Temperature measurement in degrees Celsius
    *    @return {Number}    meta.battery Battery voltage measurement in volts
    */
-function MetaData (data) {
+function MetaData(data) {
 
     // Get timestamp of snapshot
     const seconds = data.getUint8(2) + 256 * (data.getUint8(3) + 256 * (data.getUint8(4) + 256 * data.getUint8(5)));
@@ -1950,10 +1950,10 @@ transferButton.onclick = async () => {
                 // Construct filename from timestamp
                 const dt = meta.timestamp;
                 const filename = dt.getUTCFullYear() + ('0' + (dt.getUTCMonth() + 1)).slice(-2) +
-                            ('0' + dt.getUTCDate()).slice(-2) + '_' + ('0' + dt.getUTCHours()).slice(-2) +
-                            ('0' + dt.getUTCMinutes()).slice(-2) + ('0' + dt.getUTCSeconds()).slice(-2) +
-                            '_' + ('00' + dt.getUTCMilliseconds()).slice(-3) +
-                            '.bin';
+                    ('0' + dt.getUTCDate()).slice(-2) + '_' + ('0' + dt.getUTCHours()).slice(-2) +
+                    ('0' + dt.getUTCMinutes()).slice(-2) + ('0' + dt.getUTCSeconds()).slice(-2) +
+                    '_' + ('00' + dt.getUTCMilliseconds()).slice(-3) +
+                    '.bin';
 
 
                 // Add file to zip folder
@@ -2020,7 +2020,7 @@ transferButton.onclick = async () => {
 
     const rows = [['filename', 'timestamp', 'temperature', 'battery']];
 
-    function fixPrecision (value, precision) {
+    function fixPrecision(value, precision) {
 
         try {
 
@@ -2057,7 +2057,7 @@ transferButton.onclick = async () => {
 
     console.log('Save zip file.');
     // Generate zip file asynchronously
-    zip.generateAsync({type: 'blob'}).then(function (content) {
+    zip.generateAsync({ type: 'blob' }).then(function (content) {
 
         // Force down of the zip file
         saveAs(content, zipName);
@@ -2076,7 +2076,7 @@ transferButton.onclick = async () => {
  * Create an encoded URI to download positions data
  * @param {string} content Text content to be downloaded
  */
-function createDownloadLink (content, fileName) {
+function createDownloadLink(content, fileName) {
 
     const encodedUri = encodeURI(content);
 
@@ -2114,7 +2114,7 @@ notificationCheckbox.onchange = async () => {
     // This function is needed because Chrome doesn't accept a base64 encoded string
     // as value for applicationServerKey in pushManager.subscribe yet
     // https://bugs.chromium.org/p/chromium/issues/detail?id=802280
-    function urlBase64ToUint8Array (base64String) {
+    function urlBase64ToUint8Array(base64String) {
         var padding = '='.repeat((4 - base64String.length % 4) % 4);
         var base64 = (base64String + padding)
             .replace(/\-/g, '+')
@@ -2196,15 +2196,15 @@ notificationCheckbox.onchange = async () => {
         console.log(err);
         console.log('Since you did not allow push messages, you will not be notified in the web app when processing is complete.');
         displayError('We could not enable push notifications for you. ' +
-                    'Please enter an email address or use our Telegram bot ' +
-                    'if you want to receive updates about the processing progress.');
+                     'Please enter an email address or use our Telegram bot ' +
+                     'if you want to receive updates about the processing progress.');
         notificationCheckbox.checked = false;
 
     });
 
 };
 
-function getMaxVelocity () {
+function getMaxVelocity() {
 
     if (velocityInput.value === '') {
 

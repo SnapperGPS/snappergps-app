@@ -11,7 +11,7 @@
  * @param {object} data FormData object to be sent with POST message
  * @param {function} callback Function to run on completion, returning either the response or false
  */
-function sendPOSTRequest (route, data, callback) {
+function sendPOSTRequest(route, data, callback) {
 
     var xmlHttp = new XMLHttpRequest();
 

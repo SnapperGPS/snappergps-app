@@ -14,7 +14,7 @@ const MAX_ATTEMPTS = 5;
  * @param {integer} attempt Attempt number of upload. If exceeds MAX_ATTEMPTS, give up
  * @param {function} individualPostCallback Function called when this file is successfully uploaded or the process fails
  */
-function postSnapshot (formData, attempt, individualPostCallback) {
+function postSnapshot(formData, attempt, individualPostCallback) {
 
     if (attempt >= MAX_ATTEMPTS) {
 
@@ -51,7 +51,7 @@ function postSnapshot (formData, attempt, individualPostCallback) {
  * @param {string} maxVelocity Maximum receiver velocity
  * @param {function} callback Function called on completion
  */
-function startUpload (deviceID, email, subscription, maxVelocity, callback) {
+function startUpload(deviceID, email, subscription, maxVelocity, callback) {
 
     const formData = new FormData();
     formData.append('deviceID', deviceID);
@@ -89,7 +89,7 @@ function startUpload (deviceID, email, subscription, maxVelocity, callback) {
  * @param {float} temperature Temperature when snapshot was created
  * @returns Promise of flag indicating the success of uploading the snapshot after a set number of attempts
  */
-function uploadSnapshot (uploadID, data, dt, battery, hxfoCount, lxfoCount, temperature) {
+function uploadSnapshot(uploadID, data, dt, battery, hxfoCount, lxfoCount, temperature) {
 
     return new Promise((resolve) => {
 
@@ -115,7 +115,7 @@ function uploadSnapshot (uploadID, data, dt, battery, hxfoCount, lxfoCount, temp
 
 }
 
-function addReferencePoint (uploadID, lat, lng, time) {
+function addReferencePoint(uploadID, lat, lng, time) {
 
     return new Promise((resolve) => {
 
@@ -149,7 +149,7 @@ function addReferencePoint (uploadID, lat, lng, time) {
  * @param {string} uploadID Unique ID returned by startUpload()
  * @param {function} callback Function called on completion
  */
-function finishUpload (uploadID, earliestProcessingDateString, callback) {
+function finishUpload(uploadID, earliestProcessingDateString, callback) {
 
     const formData = new FormData();
     formData.append('uploadID', uploadID);
@@ -165,7 +165,7 @@ function finishUpload (uploadID, earliestProcessingDateString, callback) {
  * In the event of failure, delete upload and all snapshots associated with it
  * @param {string} uploadID Unique ID returned by startUpload()
  */
-function cancelUpload (uploadID) {
+function cancelUpload(uploadID) {
 
     console.log('Cancelling upload with upload ID ' + uploadID);
 

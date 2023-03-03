@@ -10,7 +10,7 @@
  * @param {string} uploadID Uniquer upload ID assigned by database
  * @param {function} callback Function called on completion
  */
-function loadUploadData (uploadID, callback) {
+function loadUploadData(uploadID, callback) {
 
     const formData = new FormData();
     formData.append('uploadID', uploadID);
@@ -24,7 +24,7 @@ function loadUploadData (uploadID, callback) {
  * @param {string} uploadID Unique upload ID
  * @param {function} callback Function called on completion
  */
-function getPositions (uploadID, callback) {
+function getPositions(uploadID, callback) {
 
     const formData = new FormData();
     formData.append('uploadID', uploadID);
@@ -38,11 +38,11 @@ function getPositions (uploadID, callback) {
  * @param {string} uploadID Unique upload ID
  * @param {function} callback Function called on completion
  */
- function getFirstLastSnapshotTimestamps (uploadID, callback) {
+function getFirstLastSnapshotTimestamps(uploadID, callback) {
 
     const formData = new FormData();
     formData.append('uploadID', uploadID);
 
     sendPOSTRequest('getFirstLastSnapshotTimestamps', formData, callback);
 
- }
+}

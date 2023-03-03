@@ -43,7 +43,7 @@ module.exports = function (app, dbClient) {
 
         if (!uploadID) {
 
-            res.render('search', {displayError: false});
+            res.render('search', { displayError: false });
             return;
 
         }
@@ -52,12 +52,12 @@ module.exports = function (app, dbClient) {
 
             if (err || dbRes.rows.length === 0) {
 
-                res.render('search', {displayError: true, uploadID: uploadID});
+                res.render('search', { displayError: true, uploadID: uploadID });
                 return;
 
             }
 
-            res.render('view', {uploadID: uploadID});
+            res.render('view', { uploadID: uploadID });
 
         });
 
@@ -292,7 +292,7 @@ module.exports = function (app, dbClient) {
 
         }
 
-        res.render('success', {uploadID: uploadID});
+        res.render('success', { uploadID: uploadID });
 
     });
 
@@ -333,6 +333,8 @@ module.exports = function (app, dbClient) {
 
             const deviceID = uploadRes.rows[0].device_id;
 
+            const maxVelocity = uploadRes.rows[0].max_velocity;
+
             // Pull information from reference_points table
 
             dbFunctions.getReferencePoints(dbClient, uploadID, (err, referenceRes) => {
@@ -349,7 +351,7 @@ module.exports = function (app, dbClient) {
 
                 referenceRes.rows.forEach(row => {
 
-                    referencePoints.push({lat: row.lat, lng: row.lng, dt: row.datetime});
+                    referencePoints.push({ lat: row.lat, lng: row.lng, dt: row.datetime });
 
                 });
 
@@ -373,7 +375,8 @@ module.exports = function (app, dbClient) {
                         datetime: uploadDt,
                         referencePoints: referencePoints,
                         snapshotCount: snapshotCount,
-                        deviceID: deviceID
+                        deviceID: deviceID,
+                        maxVelocity: maxVelocity
                     };
 
                     res.json(information);
@@ -495,6 +498,15 @@ module.exports = function (app, dbClient) {
     app.get('/privacy', (req, res) => {
 
         res.render('privacy');
+
+    });
+
+    /**
+     * Render the animation page.
+     */
+    app.get('/animate', (req, res) => {
+
+        res.render('animate');
 
     });
 
