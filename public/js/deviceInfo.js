@@ -33,7 +33,7 @@ const statusSpan = document.getElementById('status-span');
 /**
  * Reset UI elements to placeholder values
  */
-function resetDeviceInfo () {
+function resetDeviceInfo() {
 
     timeSpan.innerHTML = '-';
     batteryVoltageSpan.innerHTML = '-';
@@ -59,7 +59,7 @@ function resetDeviceInfo () {
 /**
  * Use collected device information to fill in UI elements
  */
-function updateDeviceInfo () {
+function updateDeviceInfo() {
 
     if (deviceID !== null) {
 
@@ -137,7 +137,7 @@ function updateDeviceInfo () {
 /**
  * Request information from a connected Snapper device
  */
-async function getDeviceInformation () {
+async function getDeviceInformation() {
 
     if (device) {
 
@@ -197,17 +197,17 @@ async function getDeviceInformation () {
             // Read device state
             switch (result.data.getUint8(62)) { // previously 9
 
-            case 0:
-                statusString = 'Will shutdown';
-                break;
-            case 1:
-                statusString = 'Will record';
-                break;
-            case 2:
-                statusString = 'Erasing';
-                break;
-            default:
-                statusString = 'Undefined';
+                case 0:
+                    statusString = 'Will shutdown';
+                    break;
+                case 1:
+                    statusString = 'Will record';
+                    break;
+                case 2:
+                    statusString = 'Erasing';
+                    break;
+                default:
+                    statusString = 'Undefined';
 
             }
 

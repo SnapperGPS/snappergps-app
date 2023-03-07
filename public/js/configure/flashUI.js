@@ -27,7 +27,7 @@ var restarting = false;
 /**
  * Enable configuration user interface objects
  */
-function enableUI () {
+function enableUI() {
 
     if (isDeviceAvailable()) {
 
@@ -42,7 +42,7 @@ function enableUI () {
 /**
  * Disable configuration user interface objects
  */
-function disableUI () {
+function disableUI() {
 
     pairButton.disabled = true;
     firmwareButton.disabled = true;
@@ -52,7 +52,7 @@ function disableUI () {
 /**
  * Looping function which checks for presence of WebUSB device
  */
-function checkForDevice (repeat = true) {
+function checkForDevice(repeat = true) {
 
     if (isDeviceAvailable()) {
 
@@ -120,7 +120,7 @@ function checkForDevice (repeat = true) {
  * Report an error to the user
  * @param {string} err Error text to be shown to the user
  */
-function displayError (err) {
+function displayError(err) {
 
     console.error(err);
 
@@ -181,7 +181,7 @@ firmwareButton.addEventListener('click', () => {
  * Update firmware button and UI to display a spinner and "Updating..." text when snapshots are being transferred
  * @param {bool} isUpdating Is the app currently transferring snapshots
  */
-function setUpdating (isUpdating) {
+function setUpdating(isUpdating) {
 
     configuring = isUpdating;
 

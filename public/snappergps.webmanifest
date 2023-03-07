@@ -45,9 +45,9 @@
     ],
     "screenshots": [
         {
-            "src": "images/Screenshot 2021-06-26 232450.avif",
+            "src": "images/Screenshot_2021-06-26_232450.png",
             "sizes": "300x172",
-            "type": "image/avif"
+            "type": "image/png"
         }
     ]
   }

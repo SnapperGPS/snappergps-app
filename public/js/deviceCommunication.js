@@ -25,7 +25,7 @@ var disconnectFunction;
 /**
  * Establish a connection with a previously paired Snapper device
  */
-async function connectToDevice (repeat = false) {
+async function connectToDevice(repeat = false) {
 
     if (!navigator.usb) {
 
@@ -114,7 +114,7 @@ async function connectToDevice (repeat = false) {
  * Pages which use this script can set a custom function which is called when a device is disconnected
  * @param {function} onDisconnectFunction Function called when device is disconnected
  */
-function setDisconnectFunction (onDisconnectFunction) {
+function setDisconnectFunction(onDisconnectFunction) {
 
     disconnectFunction = onDisconnectFunction;
 
@@ -127,7 +127,7 @@ function setDisconnectFunction (onDisconnectFunction) {
  * @param {object} endDt Datetime object for when the device should stop collecting snapshots
  * @param {function} callback Function called when complete
  */
-async function start (snapshotInterval, startDt, endDt, callback) {
+async function start(snapshotInterval, startDt, endDt, callback) {
 
     if (isDeviceAvailable()) {
 
@@ -181,7 +181,7 @@ async function start (snapshotInterval, startDt, endDt, callback) {
 /**
  * Send the current time to a connected device
  */
-async function setTime (callback) {
+async function setTime(callback) {
 
     if (isDeviceAvailable()) {
 
@@ -226,7 +226,7 @@ async function setTime (callback) {
  * Order device to shutdown after unplugging
  * @param {function} callback Function called on completion
  */
-async function shutdown (callback) {
+async function shutdown(callback) {
 
     if (isDeviceAvailable()) {
 
@@ -262,7 +262,7 @@ async function shutdown (callback) {
 /**
  * Order device to update firmware.
  */
-async function updateFirmware (files, FIRMWARE_LENGTH = 48 * 1024, FLASH_PAGE_LENGTH = 2048) {
+async function updateFirmware(files, FIRMWARE_LENGTH = 48 * 1024, FLASH_PAGE_LENGTH = 2048) {
 
     console.log('Using ' + FIRMWARE_LENGTH + ' as firmware size.');
     console.log('Using ' + FLASH_PAGE_LENGTH + ' as page size.');
@@ -355,7 +355,7 @@ async function updateFirmware (files, FIRMWARE_LENGTH = 48 * 1024, FLASH_PAGE_LE
 /**
  * Connect to a Snapper device
  */
-async function requestDevice (callback) {
+async function requestDevice(callback) {
 
     if (!navigator.usb) {
 
@@ -373,7 +373,7 @@ async function requestDevice (callback) {
     try {
 
         device = await navigator.usb.requestDevice({
-            filters: [{vendorId: 0x10c4}]
+            filters: [{ vendorId: 0x10c4 }]
         });
 
     } catch {
@@ -411,7 +411,7 @@ async function requestDevice (callback) {
 
 }
 
-function crc16 (buffer) {
+function crc16(buffer) {
 
     var crc, byte, code;
     crc = 0x0;
@@ -433,8 +433,8 @@ function crc16 (buffer) {
 
 }
 
-// Check if a WebUSB device is paried, opened, and its interface is claimed.
-function isDeviceAvailable () {
+// Check if a WebUSB device is paired, opened, and its interface is claimed.
+function isDeviceAvailable() {
 
     return device &&
            device.opened &&

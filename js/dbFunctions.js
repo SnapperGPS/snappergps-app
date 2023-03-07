@@ -8,7 +8,7 @@ const crypto = require('crypto');
 /**
  * Generate a random, alphanumeric ID of length 10
  */
-function generateID () {
+function generateID() {
 
     return crypto.randomBytes(5).toString('hex');
 
@@ -191,7 +191,7 @@ exports.deleteUpload = (dbClient, uploadID, callback) => {
  */
 exports.getUploadInformation = (dbClient, uploadID, callback) => {
 
-    dbClient.query('SELECT datetime, device_id FROM uploads WHERE upload_id = $1', [uploadID], callback);
+    dbClient.query('SELECT datetime, device_id, max_velocity FROM uploads WHERE upload_id = $1', [uploadID], callback);
 
 };
 

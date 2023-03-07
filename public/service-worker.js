@@ -7,7 +7,7 @@
 // Cache name
 const CACHE = 'snappergps-static-v1';
 
-async function updateCache () {
+async function updateCache() {
     // Open 'caches' object
     caches.open(CACHE).then(function (cache) {
         // Populate 'caches' object with list of resources to cache

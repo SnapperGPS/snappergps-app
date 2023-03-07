@@ -17,6 +17,7 @@ var referencePoints = [];
 var processedPositionCount = null;
 var snapshotCount = 0;
 var deviceID = null;
+var maxVelocity = null;
 
 const deviceIdDisplay = document.getElementById('device-id-display');
 const uploadDateDisplay = document.getElementById('upload-date-display');
@@ -32,6 +33,10 @@ const percentageLbl = document.getElementById('percentage-lbl');
 
 // Spinner while downloading
 const downloadSpinner = document.getElementById('download-spinner');
+
+// Label for max velocity
+const maxVelocityDisplay = document.getElementById('max-velocity-lbl');
+const maxVelocityListItem = document.getElementById('max-velocity-list-item');
 
 // Date range selector
 const startDateInput = document.getElementById('start-date-input');
@@ -92,7 +97,7 @@ var raw_positions = {};
  * @param {string} id Leaflet title layer ID
  * @returns Tile layer object
  */
-function getTileLayer (id) {
+function getTileLayer(id) {
 
     // Retrieve specific base map layer from mapbox API
     return L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -111,7 +116,7 @@ function getTileLayer (id) {
  * Get all tile layers a user could choose to display on a map
  * @returns A JSON object of tile layers
  */
-function getTileLayers () {
+function getTileLayers() {
 
     return {
         Streets: getTileLayer('mapbox/streets-v11'),
@@ -128,7 +133,7 @@ function getTileLayers () {
  * Request information needed to fill in UI and map
  * @param {function} callback Function called on completion
  */
-function getInformation (callback) {
+function getInformation(callback) {
 
     loadUploadData(uploadID, (informationRes) => {
 
@@ -148,6 +153,8 @@ function getInformation (callback) {
 
         deviceID = responseJSON.deviceID;
 
+        maxVelocity = responseJSON.maxVelocity;
+
         callback();
 
     });
@@ -157,7 +164,7 @@ function getInformation (callback) {
 /**
  * Fill UI with data from the database
  */
-function populateFields () {
+function populateFields() {
 
     deviceIdDisplay.innerText = deviceID;
 
@@ -167,13 +174,16 @@ function populateFields () {
                                               '/' +
                                               snapshotCount.toString();
 
+    maxVelocityListItem.style.display = (maxVelocity === null) ? 'none' : '';
+    maxVelocityDisplay.innerText = (maxVelocity === null ? '?' : maxVelocity.toString()) + ' m/s';
+
 }
 
 /**
  * Given a set of locations and timestamps, draw the path to the map
  * @param {array} positions Array of JSON objects containing positions and corrected timestamps
  */
-function populateMap (positions) {
+function populateMap(positions) {
 
     // Clear map first
     markersLayer.clearLayers();
@@ -197,7 +207,7 @@ function populateMap (positions) {
         var date = new Date(timestamp * 1000); // Unix time [s] to UTC
         if (date >= startDateTime && date <= endDateTime) {
             // Add marker.
-            const marker = L.marker([lat, lng], {icon: zebraIcon, riseOnHover: true}); // .addTo(myMap);
+            const marker = L.marker([lat, lng], { icon: zebraIcon, riseOnHover: true });
             // Do not add marker to map by default because it slows down
             // everything if 10,000 points are present.
             // Check if point is good.
@@ -249,8 +259,11 @@ function populateMap (positions) {
         // Add polyline to respective layer to allow easy disabling.
         lineLayer.addLayer(polyline);
         // Fit bounds of map to track.
-        map.fitBounds(polyline.getBounds().pad(0.1), {maxZoom: 16});
+        map.fitBounds(polyline.getBounds().pad(0.1), { maxZoom: 16 });
         // Padding to guarantee some space around everything
+
+        // Store polyline locally
+        localStorage.setItem('pointList', JSON.stringify(pointList));
 
     } else {
 
@@ -273,25 +286,25 @@ function populateMap (positions) {
             processingWarningDisplay.style.display = '';
             processingWarningText.innerHTML = 'SnapperGPS did not find any confident location estimates for your uploaded snapshots. ' +
                 'Check the troubleshooting section on ' +
-                 "<a class='text-link' href='/'>the home page</a> " +
-                 'and the ' +
-                 "<a class='text-link' href='https://github.com/SnapperGPS/snappergps-pcb/discussions'>the discussions on GitHub</a> " +
-                 'to improve your results.';
+                "<a class='text-link' href='/'>the home page</a> " +
+                'and the ' +
+                "<a class='text-link' href='https://github.com/SnapperGPS/snappergps-pcb/discussions'>the discussions on GitHub</a> " +
+                'to improve your results.';
         } else if (pointList.length / positions.length < 0.7) {
             processingWarningDisplay.style.display = '';
             processingWarningText.innerHTML = 'SnapperGPS did not find confident location estimates for quite a few of your uploaded snapshots. ' +
                 'Check the troubleshooting section on ' +
-                 "<a class='text-link' href='/'>the home page</a> " +
-                 'and the ' +
-                 "<a class='text-link' href='https://github.com/SnapperGPS/snappergps-pcb/discussions'>the discussions on GitHub</a> " +
-                 'to improve your results.';
+                "<a class='text-link' href='/'>the home page</a> " +
+                'and the ' +
+                "<a class='text-link' href='https://github.com/SnapperGPS/snappergps-pcb/discussions'>the discussions on GitHub</a> " +
+                'to improve your results.';
         }
 
         // Display battery warning
         if (deviceID != 'AAAABBBBCCCCDDDD' && positions[0].battery < batteryWarningThreshold) {
             batteryWarningDisplay.style.display = '';
             batteryWarningText.innerHTML = 'Your deployment started with a battery voltage of ' +
-            positions[0].battery + ' V, which is low. ' +
+                positions[0].battery + ' V, which is low. ' +
                 'For best results, make sure that the battery was sufficiently charged before the deployment. ' +
                 'Ideally, a long deployment should start with a battery voltage of at least 4.1 V. ' +
                 'A low battery voltage can also be caused by a short. ' +
@@ -311,7 +324,7 @@ function populateMap (positions) {
  * Create an encoded URI to download positions data
  * @param {int} positionIdx Index of position to be removed
  */
-function removePosition (positionIdx) {
+function removePosition(positionIdx) {
 
     positions[positionIdx].estimated_horizontal_error = null;
 
@@ -326,7 +339,7 @@ window.removePosition = removePosition;
  * Create an encoded URI to download positions data
  * @param {string} content Text content to be downloaded
  */
-function createDownloadLink (content, fileName) {
+function createDownloadLink(content, fileName) {
 
     const encodedUri = encodeURI(content);
 
@@ -344,7 +357,7 @@ function createDownloadLink (content, fileName) {
 
 }
 
-function fixPrecision (value, precision) {
+function fixPrecision(value, precision) {
 
     try {
 
@@ -453,7 +466,7 @@ downloadJSONButton.addEventListener('click', () => {
  *
  * @return {GeoJSON}  json object.
  */
-function getGeoJson () {
+function getGeoJson() {
 
     const json = markersLayer.toGeoJSON();
     // Loop over all data to add timestamps.
@@ -561,7 +574,7 @@ downloadKMLButton.addEventListener('click', () => {
 /**
  * Check if a point from the database has valid coordinates.
  */
-function isPositionValid (position) {
+function isPositionValid(position) {
     // Extract point.
     const lat = position.estimated_lat;
     const lng = position.estimated_lng;
@@ -575,7 +588,7 @@ function isPositionValid (position) {
 /**
  * Check if a point from the database is a good fix.
  */
-function isPositionPlausible (position) {
+function isPositionPlausible(position) {
     // Extract point.
     const lat = position.estimated_lat;
     const lng = position.estimated_lng;
@@ -591,7 +604,7 @@ function isPositionPlausible (position) {
             && confidence < 200)
 }
 
-function enableOrDisableButtons (disableButtons) {
+function enableOrDisableButtons(disableButtons) {
 
     downloadCSVButton.disabled = disableButtons;
     downloadJSONButton.disabled = disableButtons;
@@ -600,7 +613,7 @@ function enableOrDisableButtons (disableButtons) {
 
 }
 
-function enableOrDisableSmoothing (disableSmoothing) {
+function enableOrDisableSmoothing(disableSmoothing) {
     smoothInput.disabled = disableSmoothing;
 }
 
@@ -689,7 +702,7 @@ smoothInput.addEventListener('change', () => {
         console.log('Reset.')
         positions = JSON.parse(JSON.stringify(raw_positions));
     } else {
-        
+
         const reference_latlon = new LatLon(referencePoints[0].lat, referencePoints[0].lng, 0.0);
 
         let firstPlausiblePositionIdx = 0;
@@ -736,17 +749,17 @@ smoothInput.addEventListener('change', () => {
                 // Forward pass k+1
 
                 const position = raw_positions[k];
-                const prev_position = raw_positions[k-1];
+                const prev_position = raw_positions[k - 1];
                 const dT = position.timestamp - prev_position.timestamp;
 
                 // Predicted (a priori) state estimate
-                xn_prio[k] = F * xn_post[k-1];  // KF
-                xe_prio[k] = F * xe_post[k-1];  // KF
+                xn_prio[k] = F * xn_post[k - 1];  // KF
+                xe_prio[k] = F * xe_post[k - 1];  // KF
                 // Covariance of process noise
                 const Q = sigma_noise * dT;
                 // Predicted (a priori) estimate covariance
-                Pn_prio[k] = F * Pn_post[k-1] * F + Q;
-                Pe_prio[k] = F * Pe_post[k-1] * F + Q;
+                Pn_prio[k] = F * Pn_post[k - 1] * F + Q;
+                Pe_prio[k] = F * Pe_post[k - 1] * F + Q;
 
                 // Check if observation is valid
                 if (isPositionPlausible(position)) {
@@ -793,22 +806,22 @@ smoothInput.addEventListener('change', () => {
             // Smoothed covariances
             const Pn_smooth = Array(positions.length).fill(NaN);
             const Pe_smooth = Array(positions.length).fill(NaN);
-            
+
             // Initialize with last filtered estimate
-            xn_smooth[positions.length-1] = xn_post[positions.length-1];
-            xe_smooth[positions.length-1] = xe_post[positions.length-1];
-            Pn_smooth[positions.length-1] = Pn_post[positions.length-1];
-            Pe_smooth[positions.length-1] = Pe_post[positions.length-1];
-            
+            xn_smooth[positions.length - 1] = xn_post[positions.length - 1];
+            xe_smooth[positions.length - 1] = xe_post[positions.length - 1];
+            Pn_smooth[positions.length - 1] = Pn_post[positions.length - 1];
+            Pe_smooth[positions.length - 1] = Pe_post[positions.length - 1];
+
             // Backward pass
             for (let k = positions.length - 2; k >= 0; --k) {
                 // Backward pass positions.length-k
-                const Cn = Pn_post[k] * F * (1.0 / Pn_prio[k+1]);
-                const Ce = Pe_post[k] * F * (1.0 / Pe_prio[k+1]);
-                xn_smooth[k] = xn_post[k] + Cn * (xn_smooth[k+1] - xn_prio[k+1]);
-                xe_smooth[k] = xe_post[k] + Ce * (xe_smooth[k+1] - xe_prio[k+1]);
-                Pn_smooth[k] = Pn_post[k] + Cn * (Pn_smooth[k+1] - Pn_prio[k+1]) * Cn;
-                Pe_smooth[k] = Pe_post[k] + Ce * (Pe_smooth[k+1] - Pe_prio[k+1]) * Ce;
+                const Cn = Pn_post[k] * F * (1.0 / Pn_prio[k + 1]);
+                const Ce = Pe_post[k] * F * (1.0 / Pe_prio[k + 1]);
+                xn_smooth[k] = xn_post[k] + Cn * (xn_smooth[k + 1] - xn_prio[k + 1]);
+                xe_smooth[k] = xe_post[k] + Ce * (xe_smooth[k + 1] - xe_prio[k + 1]);
+                Pn_smooth[k] = Pn_post[k] + Cn * (Pn_smooth[k + 1] - Pn_prio[k + 1]) * Cn;
+                Pe_smooth[k] = Pe_post[k] + Ce * (Pe_smooth[k + 1] - Pe_prio[k + 1]) * Ce;
             }
 
             // Convert to latitude/longitude
@@ -860,7 +873,7 @@ var overlayMaps = {
 // Add control to select base map layer and to disable overlay layers.
 L.control.layers(mapLayers, overlayMaps).addTo(map);
 
-L.control.scale({position: 'bottomleft'}).addTo(map);
+L.control.scale({ position: 'bottomleft' }).addTo(map);
 
 console.log('Loading upload ID', uploadID);
 
@@ -886,7 +899,7 @@ getInformation(() => {
         if (!disableButtons) {
 
             // Get start and end date from first and last processed snapshot
-    
+
             startDateTime = new Date(positions[0].timestamp * 1000); // Unix time [s] to UTC
             endDateTime = new Date(Math.ceil(positions[processedPositionCount - 1].timestamp / 60) * 60 * 1000); // Unix time [s] to UTC, round-up
 
@@ -919,23 +932,29 @@ getInformation(() => {
                 const snapshotTimestamps = JSON.parse(timestampsRes);
                 const snapshotStartDt = new Date(snapshotTimestamps.startDatetime);
                 const snapshotEndDt = new Date(snapshotTimestamps.endDatetime);
-                const selectedStartDt = new Date(referencePoints[0].dt);
-                const selectedEndDt = new Date(referencePoints[1].dt);
-                if (snapshotStartDt <= selectedEndDt && snapshotEndDt >= selectedStartDt) {
-                    // Selected range is good -> snapshots just have not been processed yet
-                    processingWarningText.innerHTML = 'SnappperGPS has not processed your snapshots yet.';
+                // Check if start and end point are available
+                if (referencePoints.length > 1) {
+                    const selectedStartDt = new Date(referencePoints[0].dt);
+                    const selectedEndDt = new Date(referencePoints[1].dt);
+                    if (snapshotStartDt <= selectedEndDt && snapshotEndDt >= selectedStartDt) {
+                        // Selected range is good -> snapshots just have not been processed yet
+                        processingWarningText.innerHTML = 'SnappperGPS has not processed your snapshots yet.';
+                    } else {
+                        // Selected range is bad
+                        processingWarningText.innerHTML = 'None of your uploaded snapshots falls into your selected time range. ' +
+                            'You selected ' +
+                            (selectedStartDt).toString().replace('GMT', 'UTC') +
+                            ' as start time and ' +
+                            (selectedEndDt).toString().replace('GMT', 'UTC') +
+                            ' as end time, but your snapshots were captured between ' +
+                            (snapshotStartDt).toString().replace('GMT', 'UTC') +
+                            ' and ' +
+                            (snapshotEndDt).toString().replace('GMT', 'UTC') +
+                            '.';
+                    }
                 } else {
-                    // Selected range is bad
-                    processingWarningText.innerHTML = 'None of your uploaded snapshots falls into your selected time range. ' +
-                    'You selected ' + 
-                    (selectedStartDt).toString().replace('GMT', 'UTC') +
-                    ' as start time and ' +
-                    (selectedEndDt).toString().replace('GMT', 'UTC') +
-                    ' as end time, but your snapshots were captured between ' + 
-                    (snapshotStartDt).toString().replace('GMT', 'UTC') +
-                    ' and ' +
-                    (snapshotEndDt).toString().replace('GMT', 'UTC') +
-                    '.';
+                    // Start and/or end point are missing -> incomplete upload
+                    processingWarningText.innerHTML = 'Your data upload did not complete. Please try again.';
                 }
 
             })

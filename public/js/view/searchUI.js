@@ -6,7 +6,7 @@
 const idInput = document.getElementById('id-input');
 const searchButton = document.getElementById('search-button');
 
-function searchId () {
+function searchId() {
 
     let id = idInput.value;
 

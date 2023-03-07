@@ -12,7 +12,7 @@
  * @param {object} endDt Datetime object for when the device should stop collecting snapshots
  * @param {function} callback Function called upon completion
  */
-function configure (snapshotInterval, startDt, endDt, callback) {
+function configure(snapshotInterval, startDt, endDt, callback) {
 
     console.log('Setting time');
 
