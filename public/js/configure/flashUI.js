@@ -159,6 +159,23 @@ firmwareButton.addEventListener('click', () => {
 
             }, 1000);
 
+            // Wait a bit to renable buttons (7.5 seconds)
+            // Needed on Android because the device will not be detected until the user clicks the button again
+            setTimeout(function () {
+
+                if (restarting) {
+
+                    // Change button style back
+                    setUpdating(false);
+        
+                    enableUI();
+
+                    restarting = false;
+
+                }
+
+            }, 7500);
+
         }).catch((err) => {
 
             // Failed to update firmware, show error message
