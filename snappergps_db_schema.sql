@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.6 (Ubuntu 13.6-1.pgdg20.04+1+b1)
+-- Dumped from database version 14.7 (Ubuntu 14.7-1.pgdg20.04+1)
 -- Dumped by pg_dump version 14.2
 
 SET statement_timeout = 0;
@@ -149,7 +149,8 @@ CREATE TABLE public.uploads (
     chat_id text,
     subscription json,
     max_velocity real,
-    frequency_offset real
+    frequency_offset real,
+    nickname text
 );
 
 
@@ -204,6 +205,34 @@ ALTER TABLE ONLY public.snapshots
 
 ALTER TABLE ONLY public.uploads
     ADD CONSTRAINT uploads_pkey PRIMARY KEY (upload_id);
+
+
+--
+-- Name: positions_snapshot_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX positions_snapshot_id_idx ON public.positions USING btree (snapshot_id);
+
+
+--
+-- Name: reference_points_upload_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX reference_points_upload_id_idx ON public.reference_points USING btree (upload_id);
+
+
+--
+-- Name: snapshots_upload_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX snapshots_upload_id_idx ON public.snapshots USING btree (upload_id);
+
+
+--
+-- Name: uploads_upload_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX uploads_upload_id_idx ON public.uploads USING btree (upload_id);
 
 
 --
