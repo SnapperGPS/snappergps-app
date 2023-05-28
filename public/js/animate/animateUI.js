@@ -20,6 +20,7 @@ const weightInput = document.getElementById('weight-input');
 const opacityInput = document.getElementById('opacity-input');
 const loopCheckbox = document.getElementById('loop-checkbox');
 const pointLimitInput = document.getElementById('point-limit-input');
+const datetimeSpan = document.getElementById('datetime-span');
 
 // Get colors of AIMS color scheme from CSS variables
 const lineColour = window.getComputedStyle(warningDisplay).getPropertyValue('--aims-purple');
@@ -37,6 +38,7 @@ var polylineArray = null;
 var polyline = null;
 var animationInterval = null;
 var animationStartTime = null;
+var dateArray = null;
 
 /**
  * Request tile layer to display on a Leaflet map
@@ -130,6 +132,17 @@ if (localStorage.getItem('pointList') !== null) {
     warningDisplay.style.display = '';
 }
 
+// Load datetimes from local storage if they exist
+if (localStorage.getItem('dateList') !== null) {
+    dateArray = JSON.parse(localStorage.getItem('dateList'));
+    const timestamp = dateArray[dateArray.length - 1];
+    const currentDatetime = new Date(timestamp * 1000);
+    datetimeSpan.innerText = (currentDatetime === null) ? '-' : currentDatetime.toUTCString().replace('GMT', 'UTC');
+} else {
+    datetimeSpan.innerText = '-';
+    dateArray = null;
+}
+
 // Add event listener to play button
 playButton.addEventListener('click', function () {
     // If no track is loaded, do nothing
@@ -162,6 +175,11 @@ playButton.addEventListener('click', function () {
                 if (followCheckbox.checked) {
                     // Center map on current point
                     map.panTo(polylineArray[vertexIndex]);
+                }
+                if (dateArray !== null) {
+                    const timestamp = dateArray[currentVertex];
+                    const currentDatetime = new Date(timestamp * 1000);
+                    datetimeSpan.innerText = (currentDatetime === null) ? '-' : currentDatetime.toUTCString().replace('GMT', 'UTC');
                 }
             }
             // Check if animation is finished
