@@ -11,6 +11,8 @@ const vapidPublicKey = 'BE20bzDq0YubQSxrJ2ekzU1g9rsmv7I2ZCqqwS7mO2GV0kgPJZjvQ6a0
 
 const USE_MAX_VELOCITY = true;
 
+const USE_ZIP = false;  // Offer .bin and .csv files as .zip download
+
 // Status variable which locks out certain actions when upload is in process
 var uploading = false;
 var transferring = false;
@@ -90,6 +92,9 @@ const notificationLabel = document.getElementById('notification-label');
 const velocityInput = document.getElementById('velocity-input');
 const velocityUnitInput = document.getElementById('velocity-unit-input');
 
+// Uplaod nickname
+const nicknameInput = document.getElementById('nickname-input');
+
 // Length of one snapshot in bytes
 const SNAPSHOT_BUFFER_SIZE = 0x1800; // On device (6 KB)
 const SNAPSHOT_SIZE = 6138; // Desired 12 ms snapshot (12 ms * 4.092 MHz / 8 Bit)
@@ -150,6 +155,8 @@ function createMap(mapID) {
     L.control.scale({ position: 'bottomleft' }).addTo(map);
 
     L.control.layers(mapLayers).addTo(map);
+
+    // Default view = Oxford
     map.setView([51.753449349360785, -1.2540079829543849], 11);
 
     // Add search box
@@ -345,6 +352,7 @@ function enableUI() {
 
         emailInput.disabled = false;  // TODO
         fileInput.disabled = false;
+        nicknameInput.disabled = false;
 
         if (USE_MAX_VELOCITY) {
 
@@ -422,6 +430,7 @@ function disableUploadUI() {
     disableStartEndUI(1);
     emailInput.disabled = true;
     fileInput.disabled = true;
+    nicknameInput.disabled = true;
 
     if (USE_MAX_VELOCITY) {
 
@@ -695,13 +704,15 @@ function onDeviceUploadButtonClick() {
 
     console.log('Max. velocity: ' + maxVelocity);
 
+    const nickname = nicknameInput.value;
+
     deviceID = deviceIDSpan.innerHTML;
 
     setDeviceUploading(true);
 
     // Start upload by requesting the server create an upload instance in the database, returning its ID
 
-    startUpload(deviceID, email, subscriptionJson, maxVelocity, async (err, uploadID) => {
+    startUpload(deviceID, email, subscriptionJson, maxVelocity, nickname, async (err, uploadID) => {
 
         if (err) {
 
@@ -1080,6 +1091,8 @@ function onSelectedUploadButtonClick() {
 
     console.log('Max. velocity: ' + maxVelocity);
 
+    const nickname = nicknameInput.value;
+
     setSelectedUploading(true);
 
     const selectedFiles = Array.from(fileInput.files);
@@ -1106,7 +1119,7 @@ function onSelectedUploadButtonClick() {
             // Get device ID from JSON
             const deviceID = dataObj.deviceID;
             // Create row for upload in database
-            startUpload(deviceID, email, subscriptionJson, maxVelocity, async (err, uploadID) => {
+            startUpload(deviceID, email, subscriptionJson, maxVelocity, nickname, async (err, uploadID) => {
 
                 if (err) {
 
@@ -1282,7 +1295,7 @@ function onSelectedUploadButtonClick() {
 
     const deviceID = 'AAAABBBBCCCCDDDD';
 
-    startUpload(deviceID, email, subscriptionJson, maxVelocity, async (err, uploadID) => {
+    startUpload(deviceID, email, subscriptionJson, maxVelocity, nickname, async (err, uploadID) => {
 
         if (err) {
 
@@ -1869,8 +1882,12 @@ transferButton.onclick = async () => {
         snapshots: []
     };
 
-    // Create zip file that will be returned
-    let zip = new JSZip();
+    if (USE_ZIP) {
+
+        // Create zip file that will be returned
+        let zip = new JSZip();
+
+    }
 
     // Messages to communicate to device via USB
     const requestMetaDataMessage = new Uint8Array([AM_USB_MSG_TYPE_GET_SNAPSHOT]);
@@ -1955,9 +1972,12 @@ transferButton.onclick = async () => {
                     '_' + ('00' + dt.getUTCMilliseconds()).slice(-3) +
                     '.bin';
 
+                if (USE_ZIP) {
 
-                // Add file to zip folder
-                zip.file(filename, snapshotBuffer);
+                    // Add file to zip folder
+                    zip.file(filename, snapshotBuffer);
+
+                }
 
                 // Add filename to meta data
                 filenameArray.push(filename);
@@ -2014,63 +2034,69 @@ transferButton.onclick = async () => {
                         JSON.stringify(jsonData, null, 4);
     createDownloadLink(jsonContent, jsonData.deviceID + timeString + '.json');
 
-    snapshotCountLabelTransfer.innerHTML = snapshotCountLabelMemory + ' Preparing ZIP download.';
+    snapshotCountLabelTransfer.innerHTML = snapshotCountLabelMemory;
 
-    // Turn meta data into .csv file
+    if (USE_ZIP) {
 
-    const rows = [['filename', 'timestamp', 'temperature', 'battery']];
+        snapshotCountLabelTransfer.innerHTML = snapshotCountLabelMemory + ' Preparing ZIP download.';
 
-    function fixPrecision(value, precision) {
+        // Turn meta data into .csv file
 
-        try {
+        const rows = [['filename', 'timestamp', 'temperature', 'battery']];
 
-            return value.toFixed(precision);
+        function fixPrecision(value, precision) {
 
-        } catch {
+            try {
 
-            return value;
+                return value.toFixed(precision);
+
+            } catch {
+
+                return value;
+
+            }
 
         }
 
+        // Loop over all data and add rows to csv array.
+        for (let i = 0; i < snapshotCount; ++i) {
+
+            // UNIX time [s] to UTC.
+            const datetime = timestampArray[i].toISOString();
+
+            const temperature = fixPrecision(temperatureArray[i], 1);
+            const battery = fixPrecision(batteryArray[i], 2);
+
+            rows.push([filenameArray[i], datetime, temperature, battery]);
+
+        }
+
+        const csvContent = rows.map(e => e.join(',')).join('\n');
+
+        // Add CSV file with meta data to zip folder
+        zip.file('metadata.csv', csvContent);
+
+        // Construct zip filename from current time
+        const zipName = jsonData.deviceID + timeString + '.zip';
+
+        console.log('Save zip file.');
+        // Generate zip file asynchronously
+        zip.generateAsync({ type: 'blob' }).then(function (content) {
+
+            // Force down of the zip file
+            saveAs(content, zipName);
+
+            snapshotCountLabelTransfer.innerHTML = snapshotCountLabelMemory;
+
+        });
+
     }
-
-    // Loop over all data and add rows to csv array.
-    for (let i = 0; i < snapshotCount; ++i) {
-
-        // UNIX time [s] to UTC.
-        const datetime = timestampArray[i].toISOString();
-
-        const temperature = fixPrecision(temperatureArray[i], 1);
-        const battery = fixPrecision(batteryArray[i], 2);
-
-        rows.push([filenameArray[i], datetime, temperature, battery]);
-
-    }
-
-    const csvContent = rows.map(e => e.join(',')).join('\n');
-
-    // Add CSV file with meta data to zip folder
-    zip.file('metadata.csv', csvContent);
-
-    // Construct zip filename from current time
-    const zipName = jsonData.deviceID + timeString + '.zip';
-
-    console.log('Save zip file.');
-    // Generate zip file asynchronously
-    zip.generateAsync({ type: 'blob' }).then(function (content) {
-
-        // Force down of the zip file
-        saveAs(content, zipName);
-
-        snapshotCountLabelTransfer.innerHTML = snapshotCountLabelMemory;
-
-    });
 
     console.log('Save operation done.');
 
     setTransferring(false);
 
-};
+}
 
 /**
  * Create an encoded URI to download positions data
@@ -2252,6 +2278,27 @@ if (!USE_MAX_VELOCITY) {
     velocityUnitInput.disabled = true;
 
 }
+
+window.addEventListener("pageshow", () => {
+    console.log('Page show event detected.');
+
+    // Check if coordinates are already given,
+    // e.g., after navigating backwards/forwards in the browser
+    const inputLat = parseFloat(latInputs[0].value);
+    const inputLng = parseFloat(lngInputs[0].value);
+    
+    if (areValidCoords(inputLat, inputLng)) {
+
+        // Draw uncertainty circle etc
+        updateMap(0, { lat: inputLat, lng: inputLng });
+    
+        // Set map view to given start location
+        // moveMapView(0, inputLat, inputLng);
+        maps[0].setView([inputLat, inputLng], 11);
+    
+    }
+
+});
 
 if (!navigator.usb) {
 
