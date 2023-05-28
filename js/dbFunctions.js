@@ -21,9 +21,10 @@ function generateID() {
  * @param {string} email User email address
  * @param {string} subscription User push notification subscription
  * @param {float} maxVelocity Maximum receiver velocity
+ * @param {string} nickname Uplaod nickname
  * @param {function} callback Function called on completion
  */
-exports.addUpload = (dbClient, deviceID, email, subscription, maxVelocity, callback) => {
+exports.addUpload = (dbClient, deviceID, email, subscription, maxVelocity, nickname, callback) => {
 
     const now = new Date();
     const year = now.getFullYear();
@@ -52,7 +53,7 @@ exports.addUpload = (dbClient, deviceID, email, subscription, maxVelocity, callb
 
     // Earliest processing date defaults to the UNIX epoch, then gets updated once all the snapshots have been looked at and the earliest date calculated
 
-    dbClient.query('INSERT INTO uploads(upload_id, device_id, status, earliest_processing_date, datetime, email, subscription, max_velocity) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING upload_id', [generateID(), deviceID, 'uploading', '1970-01-01 00:00:00', dtString, email, subscription, maxVelocity], callback);
+    dbClient.query('INSERT INTO uploads(upload_id, device_id, status, earliest_processing_date, datetime, email, subscription, max_velocity, nickname) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING upload_id', [generateID(), deviceID, 'uploading', '1970-01-01 00:00:00', dtString, email, subscription, maxVelocity, nickname], callback);
 
 };
 
@@ -191,7 +192,7 @@ exports.deleteUpload = (dbClient, uploadID, callback) => {
  */
 exports.getUploadInformation = (dbClient, uploadID, callback) => {
 
-    dbClient.query('SELECT datetime, device_id, max_velocity FROM uploads WHERE upload_id = $1', [uploadID], callback);
+    dbClient.query('SELECT datetime, device_id, max_velocity, nickname FROM uploads WHERE upload_id = $1', [uploadID], callback);
 
 };
 
