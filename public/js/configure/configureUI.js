@@ -43,11 +43,13 @@ let globalStartDate = null;
 
 const CURRENT_FIRMWARE_DESCRIPTION = 'SnapperGPS-Basic'; // TODO
 
-const CURRENT_FIRMWARE_VERSION = '0.0.7'; // TODO
+const CURRENT_FIRMWARE_VERSION = '0.0.8'; // TODO
 
 // Thresholds to show low battery warnings
 const batteryWarningThreshold = 2.0;
-const chargeWarningThreshold = 4.05;
+const chargeWarningThresholdLiPo = 4.05;
+const chargeWarningThresholdLR44 = 2.9;
+const noChargeWarningThresholdLR44 = 3.3;
 
 var configuring = false;
 var restarting = false;
@@ -113,7 +115,7 @@ function checkForDevice(repeat = true) {
             if (firmwareDescriptionSpan.innerHTML === '-' || firmwareVersionSpan.innerHTML === '-') {
                 firmwareButton.disabled = true;
                 firmwareInfo.innerHTML = 'No firmware found on your SnapperGPS receiver.';
-            } else if (firmwareVersionSpan.innerHTML !== CURRENT_FIRMWARE_VERSION || firmwareDescriptionSpan.innerHTML !== CURRENT_FIRMWARE_DESCRIPTION) {
+            } else if (firmwareVersionSpan.innerHTML !== CURRENT_FIRMWARE_VERSION && firmwareDescriptionSpan.innerHTML === CURRENT_FIRMWARE_DESCRIPTION) {
                 firmwareButton.disabled = false;
                 firmwareInfo.innerHTML = `Firmware ${CURRENT_FIRMWARE_DESCRIPTION} version ${CURRENT_FIRMWARE_VERSION} is available.`;
             } else {
@@ -198,7 +200,10 @@ function checkForDevice(repeat = true) {
 
     batteryWarningDisplay.style.display = (batteryVoltage !== null && batteryVoltage < batteryWarningThreshold) ? '' : 'none';
 
-    chargeWarningDisplay.style.display = (batteryVoltage !== null && batteryVoltage >= batteryWarningThreshold && batteryVoltage < chargeWarningThreshold) ? '' : 'none';
+    chargeWarningDisplay.style.display = (batteryVoltage !== null &&
+        (batteryVoltage >= noChargeWarningThresholdLR44 && batteryVoltage < chargeWarningThresholdLiPo) ||
+        (batteryVoltage >= batteryWarningThreshold && batteryVoltage < chargeWarningThresholdLR44)
+        ) ? '' : 'none';
 
     if (repeat) {
 
@@ -330,6 +335,8 @@ function onConfigureClick() {
         }
 
         let interval = parseInt(intervalInput.value);
+
+        intervalInput.value = interval;
 
         if (intervalUnitInput.value === 'minutes') {
 
@@ -626,6 +633,24 @@ function changeUIBasedOnFirmware() {
 
     }
 
+    if (firmwareDescription == 'SnapperGPS-Induction-Triggered') {
+
+        limitStartCheckbox.checked = true;
+        limitEndCheckbox.checked = true;
+        limitStartCheckbox.disabled = true;
+        limitEndCheckbox.disabled = true;
+        limitEndLabel.style.color = '';
+        limitEndDateInput.disabled = false;
+        limitEndTimeInput.disabled = false;
+        limitEndTimezone.style.color = '';
+
+    } else {
+
+        limitStartCheckbox.disabled = false;
+        limitEndCheckbox.disabled = false;
+
+    }
+
 }
 
 // Let start date/time default to next hour
@@ -638,6 +663,17 @@ limitStartDateInput.value = today;
 limitStartTimeInput.value = nextHour;
 
 updateStartTimezone();
+
+// Let end date/time default to 2 weeks
+const weeks = 2;
+dateTime.setTime(dateTime.getTime() + weeks * 7 * 24 * 60 * 60 * 1000);
+const in2weeks = dateTime.getFullYear() + '-' + ('0' + (dateTime.getMonth() + 1)).slice(-2) + '-' + ('0' + dateTime.getDate()).slice(-2);
+const in2weeksHour = ('0' + dateTime.getHours()).slice(-2) + ':00';
+
+limitEndDateInput.value = in2weeks;
+limitEndTimeInput.value = in2weeksHour;
+
+updateEndTimezone();
 
 if (!navigator.usb) {
 
