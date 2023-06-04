@@ -51,13 +51,14 @@ function postSnapshot(formData, attempt, individualPostCallback) {
  * @param {string} maxVelocity Maximum receiver velocity
  * @param {function} callback Function called on completion
  */
-function startUpload(deviceID, email, subscription, maxVelocity, callback) {
+function startUpload(deviceID, email, subscription, maxVelocity, nickname, callback) {
 
     const formData = new FormData();
     formData.append('deviceID', deviceID);
     formData.append('email', email);
     formData.append('subscription', subscription);
     formData.append('maxVelocity', maxVelocity);
+    formData.append('nickname', nickname)
 
     sendPOSTRequest('startUpload', formData, (startRes) => {
 

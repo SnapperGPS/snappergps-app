@@ -352,6 +352,18 @@ async function updateFirmware(files, FIRMWARE_LENGTH = 48 * 1024, FLASH_PAGE_LEN
 
 }
 
+// Check if a WebUSB device is paired, opened, and its interface is claimed.
+function isDeviceAvailable() {
+
+    return device &&
+           device.opened &&
+           device.configuration &&
+           device.configuration.interfaces &&
+           device.configuration.interfaces.length > 0 &&
+           device.configuration.interfaces[0].claimed;
+
+}
+
 /**
  * Connect to a Snapper device
  */
@@ -378,8 +390,17 @@ async function requestDevice(callback) {
 
     } catch {
 
-        callback('We could not pair your SnapperGPS receiver. '
-                 + 'Please check its USB connection.');
+        if (!isDeviceAvailable()) {
+
+            callback('We could not pair your SnapperGPS receiver. '
+                    + 'Please check its USB connection.');
+
+        } else {
+            
+            callback();
+            
+        }
+
         return;
 
     }
@@ -430,18 +451,6 @@ function crc16(buffer) {
 
     }
     return crc;
-
-}
-
-// Check if a WebUSB device is paired, opened, and its interface is claimed.
-function isDeviceAvailable() {
-
-    return device &&
-           device.opened &&
-           device.configuration &&
-           device.configuration.interfaces &&
-           device.configuration.interfaces.length > 0 &&
-           device.configuration.interfaces[0].claimed;
 
 }
 

@@ -79,8 +79,9 @@ module.exports = function (app, dbClient) {
         const email = req.body.email;
         const subscription = req.body.subscription;
         const maxVelocity = req.body.maxVelocity;
+        const nickname = req.body.nickname;
 
-        dbFunctions.addUpload(dbClient, deviceID, email, subscription, maxVelocity, (err, dbRes) => {
+        dbFunctions.addUpload(dbClient, deviceID, email, subscription, maxVelocity, nickname, (err, dbRes) => {
 
             if (err) {
 
@@ -335,6 +336,8 @@ module.exports = function (app, dbClient) {
 
             const maxVelocity = uploadRes.rows[0].max_velocity;
 
+            const nickname = uploadRes.rows[0].nickname;
+
             // Pull information from reference_points table
 
             dbFunctions.getReferencePoints(dbClient, uploadID, (err, referenceRes) => {
@@ -376,7 +379,8 @@ module.exports = function (app, dbClient) {
                         referencePoints: referencePoints,
                         snapshotCount: snapshotCount,
                         deviceID: deviceID,
-                        maxVelocity: maxVelocity
+                        maxVelocity: maxVelocity,
+                        nickname: nickname
                     };
 
                     res.json(information);

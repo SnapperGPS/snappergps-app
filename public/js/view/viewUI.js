@@ -18,6 +18,7 @@ var processedPositionCount = null;
 var snapshotCount = 0;
 var deviceID = null;
 var maxVelocity = null;
+var nickname = null;
 
 const deviceIdDisplay = document.getElementById('device-id-display');
 const uploadDateDisplay = document.getElementById('upload-date-display');
@@ -38,6 +39,10 @@ const downloadSpinner = document.getElementById('download-spinner');
 const maxVelocityDisplay = document.getElementById('max-velocity-lbl');
 const maxVelocityListItem = document.getElementById('max-velocity-list-item');
 
+// Label for nickname
+const nicknameDisplay = document.getElementById('nickname-lbl');
+const nicknameListItem = document.getElementById('nickname-list-item');
+
 // Date range selector
 const startDateInput = document.getElementById('start-date-input');
 const endDateInput = document.getElementById('end-date-input');
@@ -53,7 +58,9 @@ const batteryWarningDisplay = document.getElementById('battery-warning-display')
 const batteryWarningText = document.getElementById('battery-warning-text');
 
 // Threshold to show low battery warning [V]
-const batteryWarningThreshold = 4.0;
+const batteryWarningThresholdLiPo = 4.0;
+const batteryWarningThresholdLR44 = 2.9;
+const noBatteryWarningThresholdLR44 = 3.3;
 
 // Smoothing
 const smoothInput = document.getElementById('smooth-input');
@@ -155,6 +162,8 @@ function getInformation(callback) {
 
         maxVelocity = responseJSON.maxVelocity;
 
+        nickname = responseJSON.nickname;
+
         callback();
 
     });
@@ -177,6 +186,9 @@ function populateFields() {
     maxVelocityListItem.style.display = (maxVelocity === null) ? 'none' : '';
     maxVelocityDisplay.innerText = (maxVelocity === null ? '?' : maxVelocity.toString()) + ' m/s';
 
+    nicknameListItem.style.display = (nickname === null || nickname === '') ? 'none' : '';
+    nicknameDisplay.innerText = ((nickname === null || nickname === '') ? '?' : nickname);
+
 }
 
 /**
@@ -192,6 +204,7 @@ function populateMap(positions) {
 
     // Loop over data and add content to map.
     var pointList = [];
+    var dateList = [];
     for (let i = 0; i < positions.length; i++) {
         // Extract point.
         let lat, lng;
@@ -233,6 +246,8 @@ function populateMap(positions) {
                 circle.on('click', ev => ev.target.openPopup(ev.target.getLatLng()));
                 // Add confidence circle to respective layer for easy disabling.
                 circlesLayer.addLayer(circle);
+                // Store timestamp
+                dateList.push(timestamp);
             } else {
                 positions[i].estimated_horizontal_error = null;
                 // Make marker of non-plausible point almost invisible.
@@ -264,6 +279,8 @@ function populateMap(positions) {
 
         // Store polyline locally
         localStorage.setItem('pointList', JSON.stringify(pointList));
+        // Store timestamps locally
+        localStorage.setItem('dateList', JSON.stringify(dateList));
 
     } else {
 
@@ -301,15 +318,19 @@ function populateMap(positions) {
         }
 
         // Display battery warning
-        if (deviceID != 'AAAABBBBCCCCDDDD' && positions[0].battery < batteryWarningThreshold) {
+        if (deviceID != 'AAAABBBBCCCCDDDD' &&
+            ((positions[0].battery < batteryWarningThresholdLiPo && positions[0].battery > noBatteryWarningThresholdLR44) ||
+            positions[0].battery < batteryWarningThresholdLR44)) {
+
             batteryWarningDisplay.style.display = '';
             batteryWarningText.innerHTML = 'Your deployment started with a battery voltage of ' +
                 positions[0].battery + ' V, which is low. ' +
                 'For best results, make sure that the battery was sufficiently charged before the deployment. ' +
-                'Ideally, a long deployment should start with a battery voltage of at least 4.1 V. ' +
+                'Ideally, a long deployment should start with a battery voltage of at least 4.1 V (LiPo), 3.0 V (LR44), or 3.1 V (SR44). ' +
                 'A low battery voltage can also be caused by a short. ' +
                 'Do not place the board on a conductive surface and do not place conducting materials directly on the board without isolation. ' +
                 '(This includes antenna and battery.)';
+
         }
 
         if (pointList.length > 0) {

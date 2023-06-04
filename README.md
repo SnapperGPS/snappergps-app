@@ -195,8 +195,6 @@ was co-funded by an EPSRC IAA Technology Fund
 
 Parts of the SnapperGPS web app are based on work by [Peter Prince](https://github.com/pcprince).
 
-[Amanda Matthes](https://github.com/amanda-matthes) owns the copyright of the current SnapperGPS logo/icon.
-
 ##
 
 This documentation is licensed under a
