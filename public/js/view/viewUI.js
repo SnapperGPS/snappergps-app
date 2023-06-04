@@ -65,7 +65,6 @@ const noBatteryWarningThresholdLR44 = 3.3;
 // Smoothing
 const smoothInput = document.getElementById('smooth-input');
 const smoothSpinner = document.getElementById('smooth-spinner');
-// const smoothButton = document.getElementById('smooth-button');
 const smoothSpan = document.getElementById('smooth-span');
 
 let startDateTime;
