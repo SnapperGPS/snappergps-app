@@ -262,7 +262,7 @@ async function shutdown(callback) {
 /**
  * Order device to update firmware.
  */
-async function updateFirmware(files, FIRMWARE_LENGTH = 48 * 1024, FLASH_PAGE_LENGTH = 2048) {
+async function updateFirmware(files, FIRMWARE_LENGTH = 48 * 1024, FLASH_PAGE_LENGTH = 2048, firmwareDescription = 'SnapperGPS-Basic') {
 
     console.log('Using ' + FIRMWARE_LENGTH + ' as firmware size.');
     console.log('Using ' + FLASH_PAGE_LENGTH + ' as page size.');
@@ -287,7 +287,7 @@ async function updateFirmware(files, FIRMWARE_LENGTH = 48 * 1024, FLASH_PAGE_LEN
 
                 // Get current firmware binary on server
                 // TODO: fetch from GitHub
-                const response = await fetch('/firmware/snapper.bin');
+                const response = await fetch(`/firmware/${firmwareDescription}.bin`);
                 data = await response.blob();
 
             } else {

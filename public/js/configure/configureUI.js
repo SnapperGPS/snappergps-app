@@ -41,9 +41,12 @@ const chargeWarningDisplay = document.getElementById('charge-warning-display');
 const statusInfo = document.getElementById('status-info');
 let globalStartDate = null;
 
-const CURRENT_FIRMWARE_DESCRIPTION = 'SnapperGPS-Basic'; // TODO
-
-const CURRENT_FIRMWARE_VERSION = '0.0.8'; // TODO
+// Available firmware versions
+const firmwareDictionary = {
+    'SnapperGPS-Basic': '0.0.8',
+    'SnapperGPS-Aquatic-Coil': '2.0.3',
+    'SnapperGPS-Induction-Triggered': '2.0.3',
+};
 
 // Thresholds to show low battery warnings
 const batteryWarningThreshold = 2.0;
@@ -115,12 +118,18 @@ function checkForDevice(repeat = true) {
             if (firmwareDescriptionSpan.innerHTML === '-' || firmwareVersionSpan.innerHTML === '-') {
                 firmwareButton.disabled = true;
                 firmwareInfo.innerHTML = 'No firmware found on your SnapperGPS receiver.';
-            } else if (firmwareVersionSpan.innerHTML !== CURRENT_FIRMWARE_VERSION && firmwareDescriptionSpan.innerHTML === CURRENT_FIRMWARE_DESCRIPTION) {
-                firmwareButton.disabled = false;
-                firmwareInfo.innerHTML = `Firmware ${CURRENT_FIRMWARE_DESCRIPTION} version ${CURRENT_FIRMWARE_VERSION} is available.`;
+            // Check if firmwareDescriptionSpan.innerHTML is in firmwareDictionary and if the version number is lower than the one in the dictionary
+            } else if (firmwareDictionary[firmwareDescriptionSpan.innerHTML]) {
+                if (firmwareVersionSpan.innerHTML !== firmwareDictionary[firmwareDescriptionSpan.innerHTML]) {
+                    firmwareButton.disabled = false;
+                    firmwareInfo.innerHTML = `Firmware ${firmwareDescriptionSpan.innerHTML} version ${firmwareDictionary[firmwareDescriptionSpan.innerHTML]} is available.`;
+                } else {
+                    firmwareButton.disabled = true;
+                    firmwareInfo.innerHTML = 'Your firmware is up to date.';
+                }
             } else {
                 firmwareButton.disabled = true;
-                firmwareInfo.innerHTML = 'Your firmware is up to date.';
+                firmwareInfo.innerHTML = 'Your SnapperGPS receiver runs third-party/custom firmware that cannot be updated automatically.';
             }
 
             let timeDiffString = '';
@@ -507,7 +516,7 @@ firmwareButton.addEventListener('click', () => {
 
         firmwareInfo.innerHTML = 'Sending firmware.';
 
-        updateFirmware([]).then(() => {
+        updateFirmware([], undefined, undefined, firmwareDescriptionSpan.innerHTML).then(() => {
 
             // Successfully updated firmware, delete existing error message
             errorDisplay.style.display = 'none';
@@ -615,7 +624,8 @@ function changeUIBasedOnFirmware() {
     if (firmwareDescription === 'SnapperGPS-Saltwater' ||
         firmwareDescription === 'SnapperGPS-Saltwater-Log' ||
         firmwareDescription === 'SnapperGPS-Saltwater-Lin' ||
-        firmwareDescription === 'SnapperGPS-Saltwater-Exp') {
+        firmwareDescription === 'SnapperGPS-Saltwater-Exp' ||
+        firmwareDescription === 'SnapperGPS-Aquatic-Coil') {
 
         intervalInputText.style.color = 'lightgray';
         intervalInputLabel.style.color = 'lightgray';
@@ -633,7 +643,7 @@ function changeUIBasedOnFirmware() {
 
     }
 
-    if (firmwareDescription == 'SnapperGPS-Induction-Triggered') {
+    if (firmwareDescription == 'SnapperGPS-Induction-Triggered' || firmwareDescription == 'SnapperGPS-Aquatic-Coil') {
 
         limitStartCheckbox.checked = true;
         limitEndCheckbox.checked = true;
