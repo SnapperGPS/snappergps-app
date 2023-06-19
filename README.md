@@ -175,20 +175,21 @@ Three views of the web app run offline: *Home*, *Configure*, and *Upload*. This 
 * Note that the Python back-end is not part of this repository. To process snapshots that you have uploaded to the database, you need to run the script `process_queue.py`. This requires maintaining a local navigation database, which you can achieve with `maintain_navigation_data.py`. For more information, see the readme in [the respective repository](https://github.com/SnapperGPS/snappergps-backend).
 * If you want to release the app in an app store such as Google Play or the Microsoft Store, then you can use the [PWA builder](https://www.pwabuilder.com/) to package it. Afterwards, follow [these instructions](https://github.com/pwa-builder/CloudAPK/blob/master/Next-steps.md) to publish it on Google Play or [these instructions](https://github.com/pwa-builder/pwabuilder-windows-chromium-docs/blob/master/next-steps.md) for the Microsoft Store.
 
+
 ## Acknowledgements
 
-SnapperGPS is developed by
-[Jonas Beuchert](https://users.ox.ac.uk/~kell5462/),
-[Amanda Matthes](https://amanda-matthes.github.io/), and
+[Jonas Beuchert](https://users.ox.ac.uk/~kell5462/) and
 [Alex Rogers](https://www.cs.ox.ac.uk/people/alex.rogers/)
+are based
 in the Department of Computer Science
 of the University of Oxford.
 
-Jonas Beuchert and Amanda Matthes are
+Jonas Beuchert is
 funded by the EPSRC Centre for Doctoral Training in
 Autonomous Intelligent Machines and Systems
-(DFT00350-DF03.01, DFT00350-DF03.05) and develop
-SnapperGPS as part of their doctoral studies.
+(University of Oxford Project Code: DFT00350-DF03.01, UKRI/EPSRC Grant Reference: EP/S024050/1)
+and works on
+SnapperGPS as part of his doctoral studies.
 The implementation of SnapperGPS 
 was co-funded by an EPSRC IAA Technology Fund
 (D4D00010-BL14).
