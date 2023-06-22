@@ -1886,6 +1886,7 @@ transferButton.onclick = async () => {
 
         // Create zip file that will be returned
         let zip = new JSZip();
+        let filenameArray = [];
 
     }
 
@@ -1896,7 +1897,6 @@ transferButton.onclick = async () => {
     // Arrays for meta data
     let timestampArray = [];
     let temperatureArray = [];
-    let filenameArray = [];
     let batteryArray = [];
 
     // Count the received snapshots
@@ -1977,10 +1977,10 @@ transferButton.onclick = async () => {
                     // Add file to zip folder
                     zip.file(filename, snapshotBuffer);
 
-                }
+                    // Add filename to meta data
+                    filenameArray.push(filename);
 
-                // Add filename to meta data
-                filenameArray.push(filename);
+                }
 
                 // Append meta data and raw snapshot to data object for JSON file
                 jsonData.snapshots.push({
