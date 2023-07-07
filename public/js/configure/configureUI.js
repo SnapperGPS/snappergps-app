@@ -44,8 +44,9 @@ let globalStartDate = null;
 // Available firmware versions
 const firmwareDictionary = {
     'SnapperGPS-Basic': '0.0.8',
-    'SnapperGPS-Aquatic-Coil': '2.0.3',
-    'SnapperGPS-Induction-Triggered': '2.0.3',
+    'SnapperGPS-Aquatic-Coil': '2.0.4',
+    'SnapperGPS-Induction-Triggered': '2.0.4',
+    'SnapperGPS-Capacitance-Triggered': '0.0.6',
 };
 
 // Thresholds to show low battery warnings
@@ -625,7 +626,9 @@ function changeUIBasedOnFirmware() {
         firmwareDescription === 'SnapperGPS-Saltwater-Log' ||
         firmwareDescription === 'SnapperGPS-Saltwater-Lin' ||
         firmwareDescription === 'SnapperGPS-Saltwater-Exp' ||
-        firmwareDescription === 'SnapperGPS-Aquatic-Coil') {
+        firmwareDescription === 'SnapperGPS-Aquatic-Coil' ||
+        firmwareDescription === 'SnapperGPS-Capacitance-Triggered' ||
+        firmwareDescription === 'SnapperGPS-Capacitance-Logger') {
 
         intervalInputText.style.color = 'lightgray';
         intervalInputLabel.style.color = 'lightgray';
@@ -643,7 +646,10 @@ function changeUIBasedOnFirmware() {
 
     }
 
-    if (firmwareDescription == 'SnapperGPS-Induction-Triggered' || firmwareDescription == 'SnapperGPS-Aquatic-Coil') {
+    if (firmwareDescription == 'SnapperGPS-Induction-Triggered'
+        || firmwareDescription == 'SnapperGPS-Aquatic-Coil'
+        || firmwareDescription == 'SnapperGPS-Capacitance-Triggered'
+        || firmwareDescription == 'SnapperGPS-Capacitance-Logger') {
 
         limitStartCheckbox.checked = true;
         limitEndCheckbox.checked = true;
