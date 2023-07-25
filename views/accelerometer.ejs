@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SnapperGPS - Accelerometer</title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="js/deviceCommunication.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Measure accelerations with your SnapperGPS receiver.">
+    </head>
+    <body>
+
+        <!-- Nav bar -->
+        <%- include ('partials/navBar', {pageName: 'accelerometer'}) %>
+
+        <!-- Main body -->
+        <main class="container">
+
+            <div class="row">
+                <div class="col">
+                    <h1>Measure accelerations with your SnapperGPS receiver</h1>
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col">
+                    <i>
+                        Did you know that this site works offline, too?
+                        You can configure your SnapperGPS receiver in the field.
+                        (If you do not clear your browser cache.)
+                    </i>
+                </div>
+            </div>
+
+            <div class="row bg-white">
+
+                <div>
+                    <%- include ('partials/webUsbSupport') %>
+                </div>
+
+                <div id="error-display" style="display: none;">
+                    <div class="card text-white bg-danger mb-3" style="max-width: 100%;">
+                        <div class="card-header"><b>Error</b></div>
+                        <div class="card-body">
+                            <p class="card-text" id="error-text">Error</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        Connect your SnapperGPS receiver
+                        via USB.
+                        If you used SnapperGPS before, then you can see some information
+                        from your SnapperGPS receiver below.
+                        Otherwise, click <i>Pair receiver</i> and select your SnapperGPS
+                        receiver from the list.
+                    </div>
+                </div>
+
+                <div class="row-ident">
+                    <%- include ('partials/deviceInfo') %>
+                </div>
+
+                <div class="row btnrow row-ident">
+                    <div class="col btncol">
+                        <button class="btn btn-primary full-width" id="pair-button" style="min-width: 175px" disabled>Pair receiver</button>
+                    </div>
+                </div>
+            
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        Download the accelerometer measurement log here.
+                    </div>
+                </div>
+                
+                <div class="row btnrow row-ident">
+                    <div class="col btncol">
+                        <button class="btn btn-primary full-width" id="download-log-button" style="min-width: 175px" disabled>Download log</button>
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <span id="snapshot-count-transfer">
+                            0 snapshots transferred. 
+                        </span>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none; margin-left: 5px" id="transfer-spinner"></span>          
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light" hidden>
+
+                <!-- Seven spans created with an ejs loop named ctrl-reg-0 to ctrl-reg-6 -->
+                <% for (let i = 0; i < 7; i++) { %>
+                    <div class="row">
+                        <div class="col">
+                            CTRL_REG<%= i %>: <span id="ctrl-reg-<%= i %>-span">-</span>
+                        </div>
+                    </div>
+                <% } %>
+
+                <div class="row btnrow row-ident">
+                    <div class="col btncol">
+                        <button class="btn btn-primary full-width btncol" id="configure-accelerometer-button" style="min-width: 175px">Configure accelerometer</button>
+                        <button class="btn btn-primary full-width btncol" id="download-config-button" style="min-width: 175px">Download configuration</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        X measurement: <span id="x-span">-</span> (<span id="x-si-span">-</span>)
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        Y measurement: <span id="y-span">-</span> (<span id="y-si-span">-</span>)
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        Z measurement: <span id="z-span">-</span> (<span id="z-si-span">-</span>)
+                    </div>
+                </div>
+
+                <div class="row">
+                    <canvas id="accelerationChart"></canvas>
+                </div>
+
+                <div class="row btnrow row-ident">
+                    <div class="col btncol">
+                        <button class="btn btn-primary full-width" id="clear-button" style="min-width: 175px">Clear</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light" hidden>
+                <div class="row row-ident">
+                    <textarea id="code-textarea" rows="16" style="font-family: monospace;">
+                    </textarea>
+                </div>
+                <div id="output" style="margin-bottom: 10px; font-family: monospace; margin-left: 20px"></div>
+            </div>
+
+            <div class="row bg-light" hidden>
+
+                <div class="row">
+                    <div class="col" id="json-text"></div>
+                </div>
+                
+                <div class="row btnrow row-ident">
+                    <div class="col btncol">
+                        <button class="btn btn-primary full-width" id="download-button" style="min-width: 175px">Download JSON</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="service-worker.js"></script>
+    <script src="js/accelerometer/accelerometerUI.js"></script>
+
+</html>
