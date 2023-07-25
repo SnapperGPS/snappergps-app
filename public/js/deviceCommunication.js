@@ -16,10 +16,20 @@ const AM_USB_MSG_TYPE_FIRMWARE_FLASH = 0x06; // 0x0A previously
 // const FLASH_PAGE_LENGTH = 2048; // 2 KB
 // const FIRMWARE_LENGTH = 48 * 1024; // 48 KB
 
+// Available firmware versions
+const firmwareDictionary = {
+    'SnapperGPS-Basic': '0.0.8',
+    'SnapperGPS-Aquatic-Coil': '2.0.4',
+    'SnapperGPS-Induction-Triggered': '2.0.4',
+    'SnapperGPS-Capacitance-Triggered': '0.0.7',
+    'SnapperGPS-Capacitance-Logger': '0.0.2',
+    'SnapperGPS-Accelerometer': '0.0.2',
+};
+
+// USB device
 var device;
 
 // Function called when a device is disconnected (usually clearing UI of information about that device)
-
 var disconnectFunction;
 
 /**
@@ -259,6 +269,7 @@ async function shutdown(callback) {
     }
 
 }
+
 /**
  * Order device to update firmware.
  */

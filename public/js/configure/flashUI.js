@@ -5,7 +5,7 @@
 
 /* global requestDevice, isDeviceAvailable, getDeviceInformation,
 resetDeviceInfo, setDisconnectFunction, connectToDevice, updateFirmware,
-updateCache, firmwareSize, firmwareChunkSize */
+updateCache, firmwareSize, firmwareChunkSize, firmwareDictionary */
 
 const pairButton = document.getElementById('pair-button');
 
@@ -20,6 +20,7 @@ const firmwareSpinner = document.getElementById('firmware-spinner');
 const fileInput = document.getElementById('file-input');
 // const totalSizeInput = document.getElementById('total-size-input');
 // const chunkSizeInput = document.getElementById('chunk-size-input');
+const firmwareSelect = document.getElementById('firmware-select');
 
 var configuring = false;
 var restarting = false;
@@ -71,7 +72,8 @@ function checkForDevice(repeat = true) {
 
             if (firmwareSize > 0 && firmwareChunkSize > 0) {
 
-                if (fileInput.files.length > 0) {
+                // Check if there is an input file or if an option that is not '-' is selected
+                if (fileInput.files.length > 0 || firmwareSelect.value !== '-') {
 
                     firmwareButton.disabled = false;
                     firmwareInfo.innerHTML = 'Firmware available for update.';
@@ -143,7 +145,7 @@ firmwareButton.addEventListener('click', () => {
 
         firmwareInfo.innerHTML = 'Sending firmware.';
 
-        updateFirmware(fileInput.files, firmwareSize, firmwareChunkSize).then(() => {
+        updateFirmware(fileInput.files, firmwareSize, firmwareChunkSize, firmwareSelect.value).then(() => {
 
             // Successfully updated firmware, delete existing error message
             errorDisplay.style.display = 'none';
@@ -237,6 +239,25 @@ setDisconnectFunction(() => {
     firmwareButton.disabled = true;
 
 });
+
+// Populate firmware-select (form-select) with keys from firmwareDictionary (HTML drop-down list)
+for (const key in firmwareDictionary) {
+    const option = document.createElement('option');
+    option.value = key;
+    option.text = key;
+    firmwareSelect.appendChild(option);
+}
+
+// On change fileInput, set firmwareSelect to '-'
+fileInput.addEventListener('change', () => {
+    firmwareSelect.value = '-';
+});
+
+// On change firmwareSelect, set fileInput to empty
+firmwareSelect.addEventListener('change', () => {
+    fileInput.value = '';
+});
+
 
 if (!navigator.usb) {
 

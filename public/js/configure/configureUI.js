@@ -3,7 +3,7 @@
  * April 2021
  *****************************************************************************/
 
-/* global configure, requestDevice, isDeviceAvailable, getDeviceInformation, resetDeviceInfo, setDisconnectFunction, connectToDevice, firmwareVersionSpan, firmwareDescriptionSpan, updateFirmware, updateCache, shutdown, batteryVoltage, statusString */
+/* global configure, requestDevice, isDeviceAvailable, getDeviceInformation, resetDeviceInfo, setDisconnectFunction, connectToDevice, firmwareVersionSpan, firmwareDescriptionSpan, updateFirmware, updateCache, shutdown, batteryVoltage, statusString, firmwareDictionary */
 
 const intervalInput = document.getElementById('interval-input');
 const intervalUnitInput = document.getElementById('interval-unit-input');
@@ -40,14 +40,6 @@ const chargeWarningDisplay = document.getElementById('charge-warning-display');
 // Info what receiver will do next
 const statusInfo = document.getElementById('status-info');
 let globalStartDate = null;
-
-// Available firmware versions
-const firmwareDictionary = {
-    'SnapperGPS-Basic': '0.0.8',
-    'SnapperGPS-Aquatic-Coil': '2.0.4',
-    'SnapperGPS-Induction-Triggered': '2.0.4',
-    'SnapperGPS-Capacitance-Triggered': '0.0.6',
-};
 
 // Thresholds to show low battery warnings
 const batteryWarningThreshold = 2.0;
@@ -354,6 +346,20 @@ function onConfigureClick() {
 
         }
 
+        // Check if firmware is SnapperGPS-Accelerometer and interval is smaller than 2 seconds
+        // If yes, display error and abort
+        if (firmwareDescriptionSpan.innerHTML === 'SnapperGPS-Accelerometer' && interval < 2) {
+
+            displayError('The minimum snapshot interval for the SnapperGPS-Accelerometer firmware is 2 seconds.');
+
+            configuring = false;
+
+            enableUI();
+
+            return;
+
+        }
+
         configure(interval, startDt, endDt, (err) => {
 
             if (err) {
@@ -649,7 +655,8 @@ function changeUIBasedOnFirmware() {
     if (firmwareDescription == 'SnapperGPS-Induction-Triggered'
         || firmwareDescription == 'SnapperGPS-Aquatic-Coil'
         || firmwareDescription == 'SnapperGPS-Capacitance-Triggered'
-        || firmwareDescription == 'SnapperGPS-Capacitance-Logger') {
+        || firmwareDescription == 'SnapperGPS-Capacitance-Logger'
+        || firmwareDescription == 'SnapperGPS-Freshwater') {
 
         limitStartCheckbox.checked = true;
         limitEndCheckbox.checked = true;
