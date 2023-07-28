@@ -514,4 +514,13 @@ module.exports = function (app, dbClient) {
 
     });
 
+    /**
+     * Render the accelerometer page.
+     */
+    app.get('/accelerometer', (req, res) => {
+            
+        res.render('accelerometer');
+
+    });
+
 };

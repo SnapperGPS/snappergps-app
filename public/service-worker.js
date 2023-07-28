@@ -15,6 +15,8 @@ async function updateCache() {
             '/',
             '/configure',
             '/upload',
+            '/flash',
+            '/accelerometer',
             '/images/favicon.ico',
             '/css/style.css',
             '/css/upload.css',
@@ -22,12 +24,17 @@ async function updateCache() {
             '/js/configure/configureUI.js',
             '/js/upload/uploadComms.js',
             '/js/upload/uploadUI.js',
+            '/js/configure/flashUI.js',
+            '/js/accelerometer/accelerometerUI.js',
             '/js/deviceCommunication.js',
             '/js/deviceInfo.js',
             '/service-worker.js',
             '/strftime-min.js',
             '/FileSaver.js',
             '/jszip.min.js',
+            '/firmware/SnapperGPS-Basic.bin',
+            '/firmware/SnapperGPS-Capacitance-Triggered.bin',
+            '/firmware/SnapperGPS-Accelerometer.bin',
         ]);
         // TODO: Handle fail of addAll operation
     })
