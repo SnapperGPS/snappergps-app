@@ -170,31 +170,6 @@
 
             </div>
 
-            <div class="row bg-light">
-
-                <div class="row">
-                    <div class="col">
-                        Configure your receiver now.
-                        Be aware that existing data will be erased.
-                    </div>
-                </div>
-
-                <div class="row btnrow row-ident">
-                    <div class="col btncol">
-                        <button class="btn btn-primary full-width" id="configure-button" style="min-width: 175px" disabled>Configure</button>
-                    </div>
-                </div>
-
-                <div class="row row-ident">
-                    <div class="col">
-                        <span id="status-info">
-                            No device connected.
-                        </span>
-                    </div>
-                </div>
-
-            </div>
-
             <div class="row bg-white">
 
                 <div id="battery-warning-display" style="display: none;">
@@ -224,7 +199,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div id="duration-warning-display" style="display: none;">
                     <div class="card text-white bg-warning mb-3">
                         <div class="card-header"><b>Warning</b></div>
                         <div class="card-body">
@@ -234,6 +209,31 @@
                                 before you record more data over a longer period of time.
                             </p>
                         </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row bg-light">
+
+                <div class="row">
+                    <div class="col">
+                        Configure your receiver now.
+                        Be aware that existing data will be erased.
+                    </div>
+                </div>
+
+                <div class="row btnrow row-ident">
+                    <div class="col btncol">
+                        <button class="btn btn-primary full-width" id="configure-button" style="min-width: 175px" disabled>Configure</button>
+                    </div>
+                </div>
+
+                <div class="row row-ident">
+                    <div class="col">
+                        <span id="status-info">
+                            No device connected.
+                        </span>
                     </div>
                 </div>
 

@@ -962,6 +962,9 @@ async function postSnapshotUploadDevice(uploadID) {
 
         }
 
+        // Store response in local storage with maximum length 20; newest element always first
+        storeUploadID(response);
+
         console.log('Upload success');
         window.location.href = '/success?uploadid=' + response +
                                '&email=' + emailInput.value +
@@ -1276,6 +1279,9 @@ function onSelectedUploadButtonClick() {
 
                     }
 
+                    // Store response in local storage with maximum length 20; newest element always first
+                    storeUploadID(response);
+
                     console.log('Upload success');
                     window.location.href = '/success?uploadid=' + response +
                         '&email=' + emailInput.value +
@@ -1487,6 +1493,9 @@ function onSelectedUploadButtonClick() {
 
             }
 
+            // Store response in local storage with maximum length 20; newest element always first
+            storeUploadID(response);
+
             console.log('Upload success');
             window.location.href = '/success?uploadid=' + response +
                                    '&email=' + emailInput.value +
@@ -1497,6 +1506,21 @@ function onSelectedUploadButtonClick() {
     });
 
 }
+
+async function storeUploadID(response) {
+
+    const maxNumOfUploadIDs = 20;
+
+    const uploadData = JSON.parse(localStorage.getItem('uploadData')) || [];
+    uploadData.unshift([response, nicknameInput.value]);
+    if (uploadData.length > maxNumOfUploadIDs) {
+        uploadData.pop();
+    }
+
+    localStorage.setItem('uploadData', JSON.stringify(uploadData));
+    
+}
+
 
 function dateToDatabaseString(latestDate, hours) {
 

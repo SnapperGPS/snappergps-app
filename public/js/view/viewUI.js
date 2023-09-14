@@ -287,6 +287,10 @@ function populateMap(positions) {
         // If no plausible point exist, show whole world
         map.setView([0, 0], 1);
 
+        // Remove 'pointList' and 'dateList' from local storage
+        localStorage.removeItem('pointList');
+        localStorage.removeItem('dateList');
+
     }
 
     if (positions.length > 0 && percentageLbl.innerHTML === '-') {

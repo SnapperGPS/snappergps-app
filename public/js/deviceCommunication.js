@@ -24,6 +24,7 @@ const firmwareDictionary = {
     'SnapperGPS-Capacitance-Triggered': '0.0.7',
     'SnapperGPS-Capacitance-Logger': '0.0.2',
     'SnapperGPS-Accelerometer': '0.0.2',
+    'SnapperGPS-Freshwater': '0.0.1',
 };
 
 // USB device

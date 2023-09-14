@@ -37,6 +37,9 @@ const firmwareSpinner = document.getElementById('firmware-spinner');
 const batteryWarningDisplay = document.getElementById('battery-warning-display');
 const chargeWarningDisplay = document.getElementById('charge-warning-display');
 
+// Long deployment warning
+const durationWarningDisplay = document.getElementById('duration-warning-display');
+
 // Info what receiver will do next
 const statusInfo = document.getElementById('status-info');
 let globalStartDate = null;
@@ -46,6 +49,7 @@ const batteryWarningThreshold = 2.0;
 const chargeWarningThresholdLiPo = 4.05;
 const chargeWarningThresholdLR44 = 2.9;
 const noChargeWarningThresholdLR44 = 3.3;
+const SHOW_POPUOP = true;
 
 var configuring = false;
 var restarting = false;
@@ -280,10 +284,51 @@ function updateEndTimezone() {
 
 }
 
-limitStartDateInput.addEventListener('change', () => updateStartTimezone());
-limitStartTimeInput.addEventListener('change', () => updateStartTimezone());
-limitEndDateInput.addEventListener('change', () => updateEndTimezone());
-limitEndTimeInput.addEventListener('change', () => updateEndTimezone());
+
+function checkForDurationWarning() {
+
+    try {
+
+        // If limitEndCheckbox is checked, check if the duration is at least a week. If yes, show a "duration" warning.
+        // If limitEndCheckbox is not checked, show "duration" warning anyways.
+        // If limitStartEndCheckbox is checked, use the start and end date to calculate the duration. If not, use the current date and the end date to calculate the duration.
+        if (limitEndCheckbox.checked) {
+
+            const startDt = limitStartCheckbox.checked ? new Date(limitStartDateInput.value + ' ' + limitStartTimeInput.value) : new Date();
+
+            const endDt = new Date(limitEndDateInput.value + ' ' + limitEndTimeInput.value);
+
+            const diff = endDt - startDt;
+
+            const diffDays = diff / 1000 / 60 / 60 / 24;
+
+            if (diffDays >= 7) {
+
+                durationWarningDisplay.style.display = '';
+
+            } else {
+
+                durationWarningDisplay.style.display = 'none';
+
+            }
+
+        } else {
+
+            durationWarningDisplay.style.display = '';
+
+        }
+
+    } catch (err) {
+        console.error(err);
+        durationWarningDisplay.style.display = 'none';
+    }
+
+}
+
+limitStartDateInput.addEventListener('change', () => {updateStartTimezone(); checkForDurationWarning();});
+limitStartTimeInput.addEventListener('change', () => {updateStartTimezone(); checkForDurationWarning();});
+limitEndDateInput.addEventListener('change', () => {updateEndTimezone(); checkForDurationWarning();});
+limitEndTimeInput.addEventListener('change', () => {updateEndTimezone(); checkForDurationWarning();});
 
 /**
  * Report an error to the user
@@ -373,6 +418,45 @@ function onConfigureClick() {
                 errorDisplay.style.display = 'none';
 
                 globalStartDate = startDt;
+
+                if (SHOW_POPUOP) {
+        
+                    // Check if firmware is 'SnapperGPS-Aquatic-Coil', 'SnapperGPS-Induction-Triggered', 'SnapperGPS-Capacitance-Triggered', 'SnapperGPS-Capacitance-Logger', 'SnapperGPS-Freshwater'
+                    if (firmwareDescriptionSpan.innerHTML === 'SnapperGPS-Aquatic-Coil' ||
+                        firmwareDescriptionSpan.innerHTML === 'SnapperGPS-Induction-Triggered' ||
+                        firmwareDescriptionSpan.innerHTML === 'SnapperGPS-Capacitance-Triggered' ||
+                        firmwareDescriptionSpan.innerHTML === 'SnapperGPS-Capacitance-Logger' ||
+                        firmwareDescriptionSpan.innerHTML === 'SnapperGPS-Freshwater') {
+        
+                        // Check if start and end date are provided and if the duration is at least a week. Next check if the battery voltage is low. If yes, show a pop-up with a warning.
+                        if (limitStartCheckbox.checked && limitEndCheckbox.checked) {
+        
+                            const diff = endDt - startDt;
+        
+                            const diffDays = diff / 1000 / 60 / 60 / 24;
+        
+                            if (diffDays >= 7) {
+        
+                                const showBatteryWarning = (batteryVoltage !== null && batteryVoltage < batteryWarningThreshold);
+        
+                                const showChargeWarning = (batteryVoltage !== null &&
+                                    (batteryVoltage >= noChargeWarningThresholdLR44 && batteryVoltage < chargeWarningThresholdLiPo) ||
+                                    (batteryVoltage >= batteryWarningThreshold && batteryVoltage < chargeWarningThresholdLR44)
+                                    );
+        
+                                if (showBatteryWarning || showChargeWarning) {
+        
+                                    alert(`Your battery does not seem to be fully charged (${batteryVoltage.toFixed(2)} V). Are you sure you want to start a ${diffDays.toFixed(0)} day deployment? For a long deployment, we recommend charging your LiPo battery to around 4.1 V or to use two LR44 or SR44 batteries with around 3.0 V combined.`);
+        
+                                }
+        
+                            }
+        
+                        }
+        
+                    }
+        
+                }
 
             }
 
@@ -697,6 +781,8 @@ limitEndDateInput.value = in2weeks;
 limitEndTimeInput.value = in2weeksHour;
 
 updateEndTimezone();
+
+checkForDurationWarning();
 
 if (!navigator.usb) {
 
