@@ -27,13 +27,13 @@ function generateID() {
 exports.addUpload = (dbClient, deviceID, email, subscription, maxVelocity, nickname, callback) => {
 
     const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const day = now.getDate();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-    const msString = now.getMilliseconds().toString().padStart(3, '0');
+    const year = now.getUTCFullYear();
+    const month = now.getUTCMonth() + 1;
+    const day = now.getUTCDate();
+    const hours = now.getUTCHours();
+    const minutes = now.getUTCMinutes();
+    const seconds = now.getUTCSeconds();
+    const msString = now.getUTCMilliseconds().toString().padStart(3, '0');
 
     let dtString = year.toString();
     dtString += '-';
@@ -114,13 +114,13 @@ exports.listUploads = (dbClient, callback) => {
  */
 exports.addSnapshot = (dbClient, uploadID, datetime, battery, hxfoCount, lxfoCount, temperature, buff, callback) => {
 
-    const year = datetime.getFullYear();
-    const month = datetime.getMonth() + 1;
-    const day = datetime.getDate();
-    const hours = datetime.getHours();
-    const minutes = datetime.getMinutes();
-    const seconds = datetime.getSeconds();
-    const msString = datetime.getMilliseconds().toString().padStart(3, '0');
+    const year = datetime.getUTCFullYear();
+    const month = datetime.getUTCMonth() + 1;
+    const day = datetime.getUTCDate();
+    const hours = datetime.getUTCHours();
+    const minutes = datetime.getUTCMinutes();
+    const seconds = datetime.getUTCSeconds();
+    const msString = datetime.getUTCMilliseconds().toString().padStart(3, '0');
 
     let dtString = year.toString();
     dtString += '-';
